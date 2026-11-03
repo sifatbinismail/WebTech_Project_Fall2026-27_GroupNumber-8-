@@ -1,0 +1,417 @@
+/* Design/Style.css (Leader only) - shared look for every page.
+   Colours: blue #2563eb, navy #0f2a5f, page background #f4f6fb, cards white */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #f4f6fb;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: #1f2937;
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+    overflow: hidden;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e3e8f0;
+    padding: 14px 28px;
+}
+
+.brand {
+    float: left;
+    font-size: 22px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.brand small {
+    font-size: 12px;
+    font-weight: normal;
+    color: #4b5563;
+    margin-left: 10px;
+}
+
+.topright {
+    float: right;
+    font-size: 14px;
+    padding-top: 4px;
+}
+
+.topright span {
+    color: #4b5563;
+    margin-right: 16px;
+}
+
+.topright a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.topright a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- page layout: sidebar on the left, content on the right ---------- */
+.wrap {
+    max-width: 1080px;
+    margin: 26px auto;
+    padding: 0 16px;
+    overflow: hidden;
+}
+
+.sidebar {
+    float: left;
+    width: 200px;
+    background-color: #ffffff;
+    border: 1px solid #e3e8f0;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.sidebar h4 {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    color: #1f2937;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: #eaf1ff;
+}
+
+.sidebar a.active {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.content {
+    margin-left: 224px;
+}
+
+.crumb {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #2563eb;
+}
+
+.title {
+    margin: 2px 0 4px 0;
+    font-size: 30px;
+    color: #0f2a5f;
+}
+
+.desc {
+    margin: 0 0 16px 0;
+    color: #4b5563;
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    border-top: 1px solid #e3e8f0;
+    padding: 18px;
+    margin-top: 10px;
+}
+
+/* ---------- cards and forms ---------- */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e3e8f0;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 19px;
+    color: #0f2a5f;
+}
+
+.card .sub {
+    margin: 2px 0 12px 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+fieldset {
+    border: 1px solid #dbe3ee;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 0;
+}
+
+legend {
+    background-color: #eaf1ff;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 7px 6px;
+    vertical-align: top;
+    text-align: left;
+}
+
+.formtable td:first-child {
+    width: 170px;
+    font-size: 14px;
+}
+
+input[type="text"], input[type="number"], input[type="email"],
+input[type="password"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #2563eb;
+    outline: 2px solid #dbe8ff;
+}
+
+button, input[type="button"], input[type="submit"] {
+    padding: 9px 20px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+button:hover, input[type="button"]:hover, input[type="submit"]:hover {
+    background-color: #1d4ed8;
+}
+
+button.light {
+    background-color: #e5eaf3;
+    color: #1f2937;
+}
+
+button.light:hover {
+    background-color: #d5ddeb;
+}
+
+button.danger {
+    background-color: #dc2626;
+}
+
+button.danger:hover {
+    background-color: #b91c1c;
+}
+
+td button {
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
+button.tab {
+    background-color: #e5eaf3;
+    color: #1f2937;
+    font-weight: bold;
+}
+
+button.tab.on {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+/* ---------- data tables ---------- */
+.datatable th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.datatable td {
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+/* status badges (the class is the status text) */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge.Available, .badge.Done, .badge.Checked-out, .badge.Active {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.badge.Occupied, .badge.Reserved, .badge.Checked-in {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.badge.Maintenance, .badge.Pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.badge.Cancelled, .badge.Disabled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* error text (red) and success text (green) */
+p.error {
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 3px 0 0 0;
+}
+
+p.ok {
+    color: #166534;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* ---------- user selection page (index.html): one card per user ---------- */
+.home {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 16px;
+}
+
+.user-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.user-card {
+    flex: 1 1 calc(50% - 16px);
+    background-color: #ffffff;
+    border: 1px solid #e3e8f0;
+    border-top: 6px solid #2563eb;
+    border-radius: 10px;
+    padding: 22px;
+    text-align: center;
+}
+
+.user-card h2 {
+    margin: 0 0 6px 0;
+    color: #0f2a5f;
+}
+
+.user-card p {
+    margin: 0 0 16px 0;
+    color: #4b5563;
+}
+
+.user-btn {
+    width: 100%;
+    margin: 0;
+}
+
+.user-card.admin { border-top-color: #0f2a5f; }
+.user-card.manager { border-top-color: #2563eb; }
+.user-card.receptionist { border-top-color: #0f766e; }
+.user-card.guest { border-top-color: #c2410c; }
+.user-card.admin .user-btn { background-color: #0f2a5f; }
+.user-card.receptionist .user-btn { background-color: #0f766e; }
+.user-card.guest .user-btn { background-color: #c2410c; }
+
+/* ---------- login / registration pages ---------- */
+.authbox {
+    max-width: 540px;
+    margin: 40px auto;
+    padding: 0 16px;
+}
+
+.authhead {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.authhead h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #0f2a5f;
+}
+
+.authhead p {
+    margin: 4px 0 0 0;
+    color: #4b5563;
+}
+
+.backlink {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.hint {
+    margin: 14px 0 0 0;
+    font-size: 12px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.hint a {
+    color: #2563eb;
+}
+
+/* final result box above the buttons (same idea as the teacher's #ResultText) */
+.resultbox {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+}
+
+.resultbox:empty {
+    display: none;
+}
+
+.resultbox.success {
+    color: #166534;
+    background-color: #dcfce7;
+    border: 1px solid #86efac;
+}
+
+.resultbox.failed {
+    color: #991b1b;
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+}

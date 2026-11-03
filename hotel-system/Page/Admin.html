@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal</title>
+    <link rel="stylesheet" href="../Design/Style.css">
+    <link rel="stylesheet" href="../Design/Admin.css">
+    <script src="../JS/Admin.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">🏨 Hotel RMS <small>Admin Portal</small></div>
+    <div class="topright"><span>Admin</span><a href="../index.html">Logout</a></div>
+</div>
+
+<div class="wrap">
+
+    <div class="sidebar">
+        <h4>Admin Menu</h4>
+        <a class="active" href="Admin.html">New Accounts</a>
+        <a href="#">Room Types</a>
+    </div>
+
+    <div class="content">
+        <div class="crumb">Admin / Accounts</div>
+        <h1 class="title">New Accounts</h1>
+        <p class="desc">See who has just created an account. The newest sign-ups are at the top.</p>
+
+        <div class="card">
+            <h2>Account Summary</h2>
+            <p class="sub">Counts of all accounts in the list below.</p>
+            <div id="accountSummary"></div>
+        </div>
+
+        <div class="card">
+            <h2>Account List</h2>
+            <p class="sub">Search by name or email, or filter by role.</p>
+            <table class="adm-filter">
+                <tr>
+                    <td><input type="text" id="SearchAccount" onkeyup="showAccounts()" placeholder="Search name or email"></td>
+                    <td>
+                        <select id="FilterRole" onchange="showAccounts()">
+                            <option value="All">All roles</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Receptionist">Receptionist</option>
+                            <option value="Guest">Guest</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <p id="AccountMsg" class="ok"></p>
+            <div class="adm-scroll"><div id="accountTable"></div></div>
+        </div>
+    </div>
+
+</div>
+<div class="footer">© 2026 Hotel Reservation System · Admin Portal</div>
+</body>
+</html>

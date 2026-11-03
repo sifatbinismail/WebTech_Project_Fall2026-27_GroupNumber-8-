@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receptionist Login</title>
+    <link rel="stylesheet" href="../Design/Style.css">
+    <script>let loginRole = "Receptionist";</script>
+    <script src="../JS/Common.js"></script>
+    <script src="../JS/Login.js"></script>
+</head>
+<body>
+<div class="authbox">
+
+    <a class="backlink" href="../index.html">← Choose another user</a>
+
+    <div class="authhead">
+        <h1>Receptionist Portal</h1>
+        <p>Login to your account or create a new one</p>
+    </div>
+
+    <div style="text-align:center; margin-bottom:14px;">
+        <button type="button" class="tab on" id="tabLogin" onclick="showLogin()">Login</button>
+        <button type="button" class="tab" id="tabSignup" onclick="showSignup()">Sign Up</button>
+    </div>
+
+    <!-- ================= LOGIN ================= -->
+    <!-- novalidate turns off the browser's own checks, so our JavaScript does all the validation -->
+    <form class="card" id="loginForm" onsubmit="return validateLoginForm()" onreset="clearAllErrors()" novalidate>
+        <h2>Login</h2>
+        <p class="sub">Enter your email and password.</p>
+        <fieldset>
+            <legend>Account Information</legend>
+            <table class="formtable">
+                <tr>
+                    <td><label for="LoginEmail">Email:</label></td>
+                    <td>
+                        <input type="email" id="LoginEmail" placeholder="Enter your email">
+                        <p class="error" id="LoginEmailError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="LoginPassword">Password:</label></td>
+                    <td>
+                        <input type="password" id="LoginPassword" placeholder="Enter your password">
+                        <p class="error" id="LoginPasswordError"></p>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <br>
+        <div class="resultbox" id="LoginResult"></div>
+        <button type="submit">Login</button>
+        <button type="reset" class="light">Reset</button>
+        <p class="hint">Test account: reception@hotel.com / recep123</p>
+    </form>
+
+    <!-- ================= SIGN UP ================= -->
+    <form class="card" id="signupForm" style="display:none" onsubmit="return validateSignupForm()" onreset="clearAllErrors()" novalidate>
+        <h2>Sign Up</h2>
+        <p class="sub">Create a new <b>Receptionist</b> account.</p>
+        <fieldset>
+            <legend>Personal Information</legend>
+            <table class="formtable">
+                <tr>
+                    <td><label for="SuFirst">First Name:</label></td>
+                    <td>
+                        <input type="text" id="SuFirst" placeholder="Enter first name">
+                        <p class="error" id="SuFirstError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="SuLast">Last Name:</label></td>
+                    <td>
+                        <input type="text" id="SuLast" placeholder="Enter last name">
+                        <p class="error" id="SuLastError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="SuEmail">Email:</label></td>
+                    <td>
+                        <input type="email" id="SuEmail" placeholder="Enter your email">
+                        <p class="error" id="SuEmailError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="SuBirthday">Birthday:</label></td>
+                    <td>
+                        <input type="date" id="SuBirthday">
+                        <p class="error" id="SuBirthdayError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="SuPhone">Phone Number:</label></td>
+                    <td>
+                        <input type="text" id="SuPhone" placeholder="e.g. 01712345678">
+                        <p class="error" id="SuPhoneError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="SuPassword">Password:</label></td>
+                    <td>
+                        <input type="password" id="SuPassword" placeholder="8+ characters, upper, lower, number">
+                        <p class="error" id="SuPasswordError"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="SuConfirm">Retype Password:</label></td>
+                    <td>
+                        <input type="password" id="SuConfirm" placeholder="Type the password again">
+                        <p class="error" id="SuConfirmError"></p>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        <br>
+        <div class="resultbox" id="SignupResult"></div>
+        <button type="submit">Create Account</button>
+        <button type="reset" class="light">Reset</button>
+    </form>
+
+</div>
+</body>
+</html>

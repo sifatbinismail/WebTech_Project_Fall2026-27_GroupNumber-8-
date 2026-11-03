@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Portal</title>
+    <link rel="stylesheet" href="../Design/Style.css">
+    <link rel="stylesheet" href="../Design/Manager.css">
+    <script src="../JS/Manager.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">🏨 Hotel RMS <small>Manager Portal</small></div>
+    <div class="topright"><span>Manager</span><a href="../index.html">Logout</a></div>
+</div>
+
+<div class="wrap">
+
+    <div class="sidebar">
+        <h4>Manager Menu</h4>
+        <a href="#" id="menuRooms" class="active" onclick="return showSection('rooms')">Report &amp; Rooms</a>
+        <a href="#" id="menuTasks" onclick="return showSection('tasks')">Housekeeping Tasks</a>
+    </div>
+
+    <div class="content">
+
+        <!-- ================= SECTION 1: REPORT & ROOMS ================= -->
+        <div id="roomsSection">
+            <div class="crumb">Manager / Rooms</div>
+            <h1 class="title">Report &amp; Room Management</h1>
+            <p class="desc">Check occupancy and revenue, then add, update and remove hotel rooms.</p>
+
+            <div class="card">
+                <h2>Occupancy &amp; Revenue Report</h2>
+                <p class="sub">Numbers are calculated from the room and task lists.</p>
+                <div id="reportBox"></div>
+            </div>
+
+            <div class="card">
+                <h2>Add / Edit Room</h2>
+                <p class="sub">Room numbers must be unique.</p>
+                <p id="RoomMode" class="mgr-mode">Mode: Add new room</p>
+                <fieldset>
+                    <legend>Room Information</legend>
+                    <table class="formtable">
+                        <tr>
+                            <td><label for="RoomNumber">Room Number:</label></td>
+                            <td>
+                                <input type="text" id="RoomNumber" placeholder="e.g. 101">
+                                <p class="error" id="RoomNumberError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="RoomType">Room Type:</label></td>
+                            <td><select id="RoomType"></select></td>
+                        </tr>
+                        <tr>
+                            <td><label for="RoomFloor">Floor (1-20):</label></td>
+                            <td>
+                                <input type="number" id="RoomFloor" placeholder="e.g. 1">
+                                <p class="error" id="RoomFloorError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="RoomStatus">Status:</label></td>
+                            <td>
+                                <select id="RoomStatus">
+                                    <option value="Available">Available</option>
+                                    <option value="Occupied">Occupied</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <button type="button" onclick="saveRoom()">Save Room</button>
+                    <button type="button" class="light" onclick="clearRoomForm()">Clear</button>
+                </fieldset>
+                <p id="RoomMsg" class="ok"></p>
+            </div>
+
+            <div class="card">
+                <h2>Room List</h2>
+                <p class="sub">Search by room number or filter by status.</p>
+                <table class="mgr-filter">
+                    <tr>
+                        <td><input type="text" id="SearchRoom" onkeyup="showRooms()" placeholder="Search room number"></td>
+                        <td>
+                            <select id="FilterStatus" onchange="showRooms()">
+                                <option value="All">All statuses</option>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div id="roomTable"></div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 2: HOUSEKEEPING TASKS ================= -->
+        <div id="tasksSection" style="display:none">
+            <div class="crumb">Manager / Hotel Care</div>
+            <h1 class="title">Housekeeping &amp; Maintenance Tasks</h1>
+            <p class="desc">Create tasks for staff, track what is pending and mark finished work as done.</p>
+
+            <div class="card">
+                <h2>Task Summary</h2>
+                <p class="sub">Updates automatically when you change the tasks.</p>
+                <div id="taskSummary"></div>
+            </div>
+
+            <div class="card">
+                <h2>Add / Edit Task</h2>
+                <p class="sub">The room list comes from the rooms you saved.</p>
+                <p id="TaskMode" class="mgr-mode">Mode: Add new task</p>
+                <fieldset>
+                    <legend>Task Information</legend>
+                    <table class="formtable">
+                        <tr>
+                            <td><label for="TaskRoom">Room:</label></td>
+                            <td>
+                                <select id="TaskRoom"></select>
+                                <p class="error" id="TaskRoomError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="TaskText">Task:</label></td>
+                            <td>
+                                <input type="text" id="TaskText" placeholder="e.g. Clean bathroom">
+                                <p class="error" id="TaskTextError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="TaskWorker">Assigned To:</label></td>
+                            <td>
+                                <input type="text" id="TaskWorker" placeholder="Staff name">
+                                <p class="error" id="TaskWorkerError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="TaskStatus">Status:</label></td>
+                            <td>
+                                <select id="TaskStatus">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Done">Done</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <button type="button" onclick="saveTask()">Save Task</button>
+                    <button type="button" class="light" onclick="clearTaskForm()">Clear</button>
+                </fieldset>
+                <p id="TaskMsg" class="ok"></p>
+            </div>
+
+            <div class="card">
+                <h2>Task List</h2>
+                <p class="sub">Filter the list by status.</p>
+                <table class="mgr-filter">
+                    <tr>
+                        <td>
+                            <select id="FilterTask" onchange="showTasks()">
+                                <option value="All">All statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Done">Done</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div id="taskTable"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="footer">© 2026 Hotel Reservation System · Manager Portal</div>
+</body>
+</html>

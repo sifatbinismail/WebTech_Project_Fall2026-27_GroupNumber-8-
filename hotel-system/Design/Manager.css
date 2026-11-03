@@ -1,0 +1,37 @@
+/* Design/Manager.css - Member 2 only. Class names start with mgr- */
+.mgr-mode {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+/* report cards: 7 cards in one row */
+.mgr-stat {
+    display: inline-block;
+    vertical-align: top;
+    width: 13.2%;
+    margin: 0 0.5% 8px 0.5%;
+    background-color: #f8fafc;
+    border: 1px solid #e3e8f0;
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-size: 12px;
+    color: #4b5563;
+}
+
+.mgr-stat b {
+    display: block;
+    margin-top: 4px;
+    font-size: 22px;
+    color: #0f2a5f;
+}
+
+/* task summary: 3 wider cards */
+.mgr-stat.wide {
+    width: 31.3%;
+}
+
+.mgr-filter td {
+    padding-left: 0;
+}
