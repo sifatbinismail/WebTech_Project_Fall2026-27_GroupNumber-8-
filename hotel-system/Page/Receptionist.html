@@ -6,26 +6,190 @@
     <title>Receptionist Panel</title>
     <link rel="stylesheet" href="../Design/Style.css">
     <link rel="stylesheet" href="../Design/Receptionist.css">
+    <script src="../JS/Common.js"></script>
     <script src="../JS/Receptionist.js"></script>
 </head>
 <body>
-
 <div class="topbar">
     <div class="brand">🏨 Hotel RMS <small>Receptionist Portal</small></div>
     <div class="topright"><span>Receptionist</span><a href="../index.html">Logout</a></div>
 </div>
-
 <div class="wrap">
     <div class="sidebar">
         <h4>Receptionist Menu</h4>
-        <a class="active" href="Receptionist.html">Reservations</a>
-        <a href="#">Check-in / Check-out</a>
+        <a href="#" id="menuReservations" class="active" onclick="return showSection('reservations')">Reservations</a>
+        <a href="#" id="menuCheck" onclick="return showSection('check')">Check-in / Check-out</a>
     </div>
     <div class="content">
-        <div class="crumb">Receptionist</div>
-        <h1 class="title">Receptionist Panel</h1>
-        <p class="desc">TODO (Receptionist owner): build your pages here. Features: Reservations CRUD, check-in/check-out, invoice, availability check</p>
-        <div class="card"><h2>Coming soon</h2><p class="sub">Copy the card + fieldset layout from ManagerRooms.html.</p></div>
+
+        <!-- ================= SECTION 1: RESERVATIONS ================= -->
+        <div id="reservationSection">
+            <div class="crumb">Receptionist / Reservations</div>
+            <h1 class="title">Reservations</h1>
+            <p class="desc">Check which rooms are free, then add, update and cancel guest reservations.</p>
+
+            <div class="card">
+                <h2>Reservation Summary</h2>
+                <p class="sub">Numbers are calculated from the reservation list below.</p>
+                <div id="reservationSummary"></div>
+            </div>
+
+            <div class="card">
+                <h2>Check Room Availability</h2>
+                <p class="sub">Choose the dates and see which rooms are free.</p>
+                <fieldset>
+                    <legend>Stay Dates</legend>
+                    <table class="formtable">
+                        <tr>
+                            <td><label for="AvailIn">Check-in Date:</label></td>
+                            <td>
+                                <input type="date" id="AvailIn">
+                                <p class="error" id="AvailInError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="AvailOut">Check-out Date:</label></td>
+                            <td>
+                                <input type="date" id="AvailOut">
+                                <p class="error" id="AvailOutError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="AvailType">Room Type:</label></td>
+                            <td><select id="AvailType"></select></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <button type="button" onclick="checkAvailability()">Check Availability</button>
+                    <button type="button" class="light" onclick="clearAvailability()">Clear</button>
+                </fieldset>
+                <div class="rec-avail" id="AvailResult"></div>
+            </div>
+
+            <div class="card">
+                <h2>Add / Edit Reservation</h2>
+                <p class="sub">A room cannot be booked twice for the same dates.</p>
+                <p id="ResMode" class="rec-mode">Mode: Add new reservation</p>
+                <fieldset>
+                    <legend>Reservation Information</legend>
+                    <table class="formtable">
+                        <tr>
+                            <td><label for="ResGuest">Guest Name:</label></td>
+                            <td>
+                                <input type="text" id="ResGuest" placeholder="Enter guest name">
+                                <p class="error" id="ResGuestError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="ResPhone">Phone Number:</label></td>
+                            <td>
+                                <input type="text" id="ResPhone" placeholder="e.g. 01712345678">
+                                <p class="error" id="ResPhoneError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="ResRoom">Room:</label></td>
+                            <td>
+                                <select id="ResRoom"></select>
+                                <p class="error" id="ResRoomError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="ResIn">Check-in Date:</label></td>
+                            <td>
+                                <input type="date" id="ResIn">
+                                <p class="error" id="ResInError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="ResOut">Check-out Date:</label></td>
+                            <td>
+                                <input type="date" id="ResOut">
+                                <p class="error" id="ResOutError"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="ResStatus">Status:</label></td>
+                            <td>
+                                <select id="ResStatus">
+                                    <option value="Reserved">Reserved</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <button type="button" onclick="saveReservation()">Save Reservation</button>
+                    <button type="button" class="light" onclick="clearReservationForm()">Clear</button>
+                </fieldset>
+                <p id="ResMsg" class="ok"></p>
+            </div>
+
+            <div class="card">
+                <h2>Reservation List</h2>
+                <p class="sub">Search by guest name or room number, or filter by status.</p>
+                <table class="rec-filter">
+                    <tr>
+                        <td><input type="text" id="SearchRes" onkeyup="showReservations()" placeholder="Search guest or room"></td>
+                        <td>
+                            <select id="FilterRes" onchange="showReservations()">
+                                <option value="All">All statuses</option>
+                                <option value="Reserved">Reserved</option>
+                                <option value="Checked-in">Checked-in</option>
+                                <option value="Checked-out">Checked-out</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div class="rec-scroll"><div id="reservationTable"></div></div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 2: CHECK-IN / CHECK-OUT ================= -->
+        <div id="checkSection" style="display:none">
+            <div class="crumb">Receptionist / Front Desk</div>
+            <h1 class="title">Check-in / Check-out</h1>
+            <p class="desc">Check guests in and out, print the invoice and see who has checked in or out.</p>
+
+            <div class="card">
+                <h2>Front Desk Summary</h2>
+                <p class="sub">Updates automatically after every check-in and check-out.</p>
+                <div id="checkSummary"></div>
+            </div>
+
+            <div class="card">
+                <h2>Front Desk</h2>
+                <p class="sub">Reserved guests wait for check-in. Checked-in guests wait for check-out.</p>
+                <table class="rec-filter">
+                    <tr>
+                        <td>
+                            <select id="FilterDesk" onchange="showDesk()">
+                                <option value="All">All guests</option>
+                                <option value="Reserved">Waiting for check-in</option>
+                                <option value="Checked-in">Waiting for check-out</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <p id="CheckMsg" class="ok"></p>
+                <div class="rec-scroll"><div id="deskTable"></div></div>
+            </div>
+
+            <div class="card">
+                <h2>Invoice</h2>
+                <p class="sub">The bill of the guest appears here after check-out.</p>
+                <div class="rec-invoice" id="invoiceBox"></div>
+            </div>
+
+            <div class="card">
+                <h2>Check-in / Check-out History</h2>
+                <p class="sub">Newest action is at the top.</p>
+                <div class="rec-log" id="logBox"></div>
+            </div>
+        </div>
+
     </div>
 </div>
 <div class="footer">© 2026 Hotel Reservation System · Receptionist Portal</div>
