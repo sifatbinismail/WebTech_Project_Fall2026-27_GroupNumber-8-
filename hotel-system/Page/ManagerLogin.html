@@ -24,8 +24,6 @@
         <button type="button" class="tab" id="tabSignup" onclick="showSignup()">Sign Up</button>
     </div>
 
-    <!-- ================= LOGIN ================= -->
-    <!-- novalidate turns off the browser's own checks, so our JavaScript does all the validation -->
     <form class="card" id="loginForm" onsubmit="return validateLoginForm()" onreset="clearAllErrors()" novalidate>
         <h2>Login</h2>
         <p class="sub">Enter your email and password.</p>
@@ -55,7 +53,6 @@
         <p class="hint">Test account: manager@hotel.com / manager123</p>
     </form>
 
-    <!-- ================= SIGN UP ================= -->
     <form class="card" id="signupForm" style="display:none" onsubmit="return validateSignupForm()" onreset="clearAllErrors()" novalidate>
         <h2>Sign Up</h2>
         <p class="sub">Create a new <b>Manager</b> account.</p>

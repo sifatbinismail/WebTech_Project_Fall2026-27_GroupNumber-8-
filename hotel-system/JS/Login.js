@@ -5,12 +5,11 @@ console.log("Login.js Connected");
 // and the Admin portal will list every new sign-up from the database.
 let accounts = [
     { first: "Admin", last: "User", email: "admin@hotel.com", password: "admin123", birthday: "1990-01-15", phone: "01711111111", role: "Admin", registered: "2026-10-01 09:00" },
-    { first: "Mona", last: "Manager", email: "manager@hotel.com", password: "manager123", birthday: "1992-03-20", phone: "01722222222", role: "Manager", registered: "2026-10-01 09:05" },
-    { first: "Rafi", last: "Reception", email: "reception@hotel.com", password: "recep123", birthday: "1995-07-08", phone: "01733333333", role: "Receptionist", registered: "2026-10-01 09:10" },
+    { first: "Sifat", last: "Manager", email: "manager@hotel.com", password: "manager123", birthday: "1992-03-20", phone: "01722222222", role: "Manager", registered: "2026-10-01 09:05" },
+    { first: "Meskat", last: "Reception", email: "reception@hotel.com", password: "recep123", birthday: "1995-07-08", phone: "01733333333", role: "Receptionist", registered: "2026-10-01 09:10" },
     { first: "Guest", last: "User", email: "guest@hotel.com", password: "guest123", birthday: "1998-11-30", phone: "01744444444", role: "Guest", registered: "2026-10-01 09:15" }
 ];
 
-// ---------- switch between the Login form and the Sign Up form ----------
 function showLogin()
 {
     document.getElementById("loginForm").style.display = "block";
@@ -27,7 +26,6 @@ function showSignup()
     document.getElementById("tabSignup").className = "tab on";
 }
 
-// ---------- LOGIN: <form onsubmit="return validateLoginForm()"> ----------
 function validateLoginForm()
 {
     let validEmail = validateEmail("LoginEmail", "LoginEmailError");
@@ -59,10 +57,9 @@ function validateLoginForm()
     showResult(true, "Login validated. Welcome, " + safeText(found.first) + "!", "LoginResult");
     alert("Login validated. Welcome, " + found.first + "!");
     goToPortal();
-    return false;   // always false: the page is changed by goToPortal()
+    return false;
 }
 
-// ---------- SIGN UP: <form onsubmit="return validateSignupForm()"> ----------
 function validateSignupForm()
 {
     let validFirst = validateName("SuFirst", "SuFirstError", "first name");
@@ -75,7 +72,6 @@ function validateSignupForm()
 
     let isValid = validFirst && validLast && validEmail && validPassword && validConfirm && validBirthday && validPhone;
 
-    // the email must not be used by another account
     let email = document.getElementById("SuEmail").value.trim();
     if (validEmail)
     {
@@ -108,7 +104,6 @@ function validateSignupForm()
         registered: new Date().toLocaleString()
     });
 
-    // clear the sign up form, go back to the login form and tell the user
     document.getElementById("signupForm").reset();
     showLogin();
     document.getElementById("LoginEmail").value = email;
@@ -116,7 +111,6 @@ function validateSignupForm()
     return false;
 }
 
-// Opens the portal of the selected role (portal pages are in the same Page folder)
 function goToPortal()
 {
     switch (loginRole)

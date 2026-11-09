@@ -1,10 +1,4 @@
 console.log("Manager.js Connected");
-// JS/Manager.js - Member 2 (Manager portal: Report, Rooms CRUD, Housekeeping Tasks CRUD)
-// Rooms and tasks are on ONE page (the menu shows/hides sections), so both use the same arrays.
-// Only things taught in class: arrays of objects, for loop, if/else, switch, getElementById, innerHTML, .style, onclick.
-// Data is kept in arrays (in memory, resets on refresh). In the final term PHP + database will store it.
-
-// ---------- DATA (same field names as the team plan) ----------
 let roomTypes = [
     { name: "Standard", price: 50 },
     { name: "Deluxe", price: 90 },
@@ -33,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
     refreshAll();
 });
 
-// redraw everything that depends on the data
 function refreshAll() {
     loadRoomOptions();
     showReport();
@@ -42,8 +35,6 @@ function refreshAll() {
     showTasks();
 }
 
-// ---------- MENU: show one section, hide the other ----------
-// used as onclick="return showSection('tasks')"  (return false keeps the page from jumping)
 function showSection(name) {
     document.getElementById("roomsSection").style.display = "none";
     document.getElementById("tasksSection").style.display = "none";
@@ -60,7 +51,6 @@ function showSection(name) {
     return false;
 }
 
-// ---------- SMALL HELPER FUNCTIONS ----------
 function getPrice(typeName) {
     for (let i = 0; i < roomTypes.length; i++) {
         if (roomTypes[i].name == typeName) {
@@ -105,7 +95,6 @@ function loadTypeOptions() {
     document.getElementById("RoomType").innerHTML = text;
 }
 
-// fills the Room drop-down of the task form with the CURRENT rooms
 function loadRoomOptions() {
     let select = document.getElementById("TaskRoom");
     let old = select.value;
@@ -117,9 +106,6 @@ function loadRoomOptions() {
     select.value = old;
 }
 
-// =====================================================
-//                      REPORT
-// =====================================================
 function showReport() {
     let available = 0;
     let occupied = 0;
@@ -159,11 +145,6 @@ function showReport() {
     document.getElementById("reportBox").innerHTML = text;
 }
 
-// =====================================================
-//                   ROOMS  (CRUD)
-// =====================================================
-
-// READ: show the rooms table (uses the search box and the status filter)
 function showRooms() {
     let search = document.getElementById("SearchRoom").value.trim();
     let filter = document.getElementById("FilterStatus").value;
@@ -198,7 +179,6 @@ function showRooms() {
     document.getElementById("roomTable").innerHTML = text;
 }
 
-// VALIDATION for the room form
 function validateRoom() {
     let ok = true;
     let number = document.getElementById("RoomNumber").value.trim();
@@ -234,7 +214,6 @@ function validateRoom() {
     return ok;
 }
 
-// CREATE and UPDATE (same button: it depends on editRoomId)
 function saveRoom() {
     document.getElementById("RoomMsg").innerHTML = "";
     if (validateRoom() == false) {
@@ -257,7 +236,7 @@ function saveRoom() {
         rooms[index].type = type;
         rooms[index].floor = floor;
         rooms[index].status = status;
-        // keep the tasks linked to the room if its number was changed
+       
         for (let i = 0; i < tasks.length; i++) {
             if (tasks[i].room == oldNumber) {
                 tasks[i].room = number;
@@ -270,7 +249,6 @@ function saveRoom() {
     document.getElementById("RoomMsg").innerHTML = msg;
 }
 
-// UPDATE step 1: copy the room into the form
 function editRoom(id) {
     let index = findRoomIndex(id);
     editRoomId = id;
@@ -284,7 +262,6 @@ function editRoom(id) {
     document.getElementById("RoomMsg").innerHTML = "";
 }
 
-// DELETE
 function deleteRoom(id) {
     let index = findRoomIndex(id);
     let number = rooms[index].number;
@@ -309,7 +286,6 @@ function deleteRoom(id) {
     }
     rooms = newRooms;
 
-    // also remove the (finished) tasks of this room
     let newTasks = [];
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].room != number) {
@@ -337,10 +313,6 @@ function clearRoomForm() {
     document.getElementById("RoomMode").innerHTML = "Mode: Add new room";
 }
 
-// =====================================================
-//            HOUSEKEEPING / MAINTENANCE TASKS (CRUD)
-// =====================================================
-
 function showSummary() {
     let pending = 0;
     let done = 0;
@@ -358,7 +330,6 @@ function showSummary() {
     document.getElementById("taskSummary").innerHTML = text;
 }
 
-// READ (uses the status filter)
 function showTasks() {
     let filter = document.getElementById("FilterTask").value;
     let text = "<table class='datatable'>";
@@ -424,7 +395,6 @@ function validateTask() {
     return ok;
 }
 
-// CREATE and UPDATE
 function saveTask() {
     document.getElementById("TaskMsg").innerHTML = "";
     if (validateTask() == false) {
@@ -453,7 +423,6 @@ function saveTask() {
     document.getElementById("TaskMsg").innerHTML = msg;
 }
 
-// UPDATE step 1: copy the task into the form
 function editTask(id) {
     let index = findTaskIndex(id);
     editTaskId = id;
@@ -468,7 +437,6 @@ function editTask(id) {
     document.getElementById("TaskMsg").innerHTML = "";
 }
 
-// DELETE
 function deleteTask(id) {
     if (confirm("Delete this task?") == false) {
         return;
@@ -487,7 +455,6 @@ function deleteTask(id) {
     document.getElementById("TaskMsg").innerHTML = "Task deleted.";
 }
 
-// Mark done. If the room was in Maintenance and no pending task is left, the room becomes Available again.
 function markDone(id) {
     let index = findTaskIndex(id);
     tasks[index].status = "Done";
