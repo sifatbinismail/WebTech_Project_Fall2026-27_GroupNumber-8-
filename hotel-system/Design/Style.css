@@ -1,5 +1,3 @@
-/* Design/Style.css (Leader only) - shared look for every page.
-   Colours: blue #2563eb, navy #0f2a5f, page background #f4f6fb, cards white */
 * {
     box-sizing: border-box;
 }
@@ -12,7 +10,6 @@ body {
     color: #1f2937;
 }
 
-/* ---------- top bar ---------- */
 .topbar {
     overflow: hidden;
     background-color: #ffffff;
@@ -55,7 +52,6 @@ body {
     text-decoration: underline;
 }
 
-/* ---------- page layout: sidebar on the left, content on the right ---------- */
 .wrap {
     max-width: 1080px;
     margin: 26px auto;
@@ -128,7 +124,6 @@ body {
     margin-top: 10px;
 }
 
-/* ---------- cards and forms ---------- */
 .card {
     background-color: #ffffff;
     border: 1px solid #e3e8f0;
@@ -246,7 +241,6 @@ button.tab.on {
     color: #ffffff;
 }
 
-/* ---------- data tables ---------- */
 .datatable th {
     background-color: #f1f5f9;
     color: #475569;
@@ -260,7 +254,6 @@ button.tab.on {
     vertical-align: middle;
 }
 
-/* status badges (the class is the status text) */
 .badge {
     display: inline-block;
     padding: 3px 10px;
@@ -289,7 +282,6 @@ button.tab.on {
     color: #991b1b;
 }
 
-/* error text (red) and success text (green) */
 p.error {
     color: #dc2626;
     font-size: 12px;
@@ -303,53 +295,92 @@ p.ok {
     font-weight: bold;
 }
 
-/* ---------- user selection page (index.html): one card per user ---------- */
 .home {
-    max-width: 860px;
-    margin: 40px auto;
-    padding: 0 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-text {
+    flex: 1 1 320px;
+}
+
+.hero-text h1 {
+    margin: 18px 0 12px 0;
+    font-size: 44px;
+    line-height: 1.15;
+    color: #0f2a5f;
+}
+
+.hero-text p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 999px;
+    background-color: #dbeafe;
+    color: #1e40af;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .user-grid {
+    flex: 1.4 1 420px;
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
 }
 
 .user-card {
-    flex: 1 1 calc(50% - 16px);
-    background-color: #ffffff;
-    border: 1px solid #e3e8f0;
-    border-top: 6px solid #2563eb;
-    border-radius: 10px;
+    flex: 1 1 200px;
+    border-radius: 20px;
     padding: 22px;
-    text-align: center;
 }
 
 .user-card h2 {
-    margin: 0 0 6px 0;
-    color: #0f2a5f;
+    margin: 0 0 10px 0;
+    font-size: 20px;
 }
 
 .user-card p {
-    margin: 0 0 16px 0;
-    color: #4b5563;
+    margin: 0 0 18px 0;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .user-btn {
     width: 100%;
     margin: 0;
+    border-radius: 999px;
+    background-color: #ffffff;
+    font-weight: bold;
 }
 
-.user-card.admin { border-top-color: #0f2a5f; }
-.user-card.manager { border-top-color: #2563eb; }
-.user-card.receptionist { border-top-color: #0f766e; }
-.user-card.guest { border-top-color: #c2410c; }
-.user-card.admin .user-btn { background-color: #0f2a5f; }
-.user-card.receptionist .user-btn { background-color: #0f766e; }
-.user-card.guest .user-btn { background-color: #c2410c; }
+.user-btn:hover {
+    background-color: #f1f5f9;
+}
 
-/* ---------- login / registration pages ---------- */
+.user-card.admin { background-color: #e0e7ff; color: #3730a3; }
+.user-card.manager { background-color: #dbeafe; color: #1e40af; }
+.user-card.receptionist { background-color: #dcfce7; color: #166534; }
+.user-card.guest { background-color: #fef3c7; color: #92400e; }
+.user-card.admin .user-btn { color: #3730a3; }
+.user-card.manager .user-btn { color: #1e40af; }
+.user-card.receptionist .user-btn { color: #166534; }
+.user-card.guest .user-btn { color: #92400e; }
+
 .authbox {
     max-width: 540px;
     margin: 40px auto;
@@ -391,7 +422,6 @@ p.ok {
     color: #2563eb;
 }
 
-/* final result box above the buttons (same idea as the teacher's #ResultText) */
 .resultbox {
     text-align: center;
     font-weight: bold;
