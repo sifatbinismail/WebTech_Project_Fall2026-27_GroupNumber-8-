@@ -1,1 +1,111 @@
-/* Design/Receptionist.css - Receptionist owner only. Start every class name with rec- */
+/* Design/Receptionist.css - Receptionist owner only. Every class starts with rec- (colours match Admin.css and Manager.css) */
+
+.rec-mode {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    font-weight: bold;
+    color: #2563eb;
+}
+.rec-stat {
+    display: inline-block;
+    vertical-align: top;
+    width: 23.5%;
+    margin: 0 0.5% 8px 0.5%;
+    background-color: #f8fafc;
+    border: 1px solid #e3e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #4b5563;
+}
+.rec-stat b {
+    display: block;
+    margin-top: 4px;
+    font-size: 22px;
+    color: #0f2a5f;
+}
+.rec-filter td {
+    padding-left: 0;
+}
+.rec-scroll {
+    overflow-x: auto;
+}
+.rec-scroll .datatable td, .rec-scroll .datatable th {
+     font-size: 12px;
+     padding: 7px 4px;
+}
+.rec-scroll .datatable td button {
+    padding: 4px 8px;
+    font-size: 12px;
+    margin: 0 4px 4px 0;
+}
+.rec-avail {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #f1f5f9;
+    border: 1px solid #e3e8f0;
+}
+.rec-avail:empty {
+    display: none;
+}
+.rec-avail.rec-free {
+    background-color: #dcfce7;
+    border-color: #86efac;
+    color: #166534;
+}
+.rec-avail.rec-busy {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+.rec-invoice {
+    margin-top: 12px;
+    padding: 16px;
+    background-color: #f8fafc;
+    border: 1px solid #e3e8f0;
+     border-radius: 8px;
+}
+.rec-invoice:empty {
+    display: none;
+}
+.rec-invoice h3 {
+    margin: 0 0 8px 0;
+    font-size: 17px;
+    color: #0f2a5f;
+}
+.rec-invoice td 
+{
+    padding: 5px 6px;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.rec-invoice td:last-child {
+    text-align: right;
+}
+.rec-total td {
+    font-size: 17px;
+    font-weight: bold;
+    color: #0f2a5f;
+    border-bottom: none;
+}
+.rec-log {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid #e3e8f0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #f8fafc;
+}
+
+.rec-log p {
+    margin: 6px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.rec-log p:last-child {
+    border-bottom: none;
+}
