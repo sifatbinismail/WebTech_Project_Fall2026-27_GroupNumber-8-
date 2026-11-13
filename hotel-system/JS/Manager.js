@@ -214,7 +214,7 @@ function validateRoom() {
     return ok;
 }
 
-function saveRoom() {
+function addRoom() {
     document.getElementById("RoomMsg").innerHTML = "";
     if (validateRoom() == false) {
         return;
@@ -395,7 +395,7 @@ function validateTask() {
     return ok;
 }
 
-function saveTask() {
+function addTask() {
     document.getElementById("TaskMsg").innerHTML = "";
     if (validateTask() == false) {
         return;

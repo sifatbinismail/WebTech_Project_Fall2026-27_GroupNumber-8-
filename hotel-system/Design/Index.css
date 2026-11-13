@@ -1,0 +1,118 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6fc;
+    color: #142d5e;
+}
+
+.home {
+    width: 100%;
+    min-height: 600px;
+    padding: 40px 6%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    padding: 40px 6%;
+    margin:0px;
+}
+.hero {
+    align-items: center;
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 40px;
+}
+.hero-text {
+    padding: 20px 0;
+    border: 2px solid rgb(236, 233, 233);
+    padding: 20px;
+    border-radius: 15px;
+    background-color: rgb(255, 255, 245) ;
+}
+.tag {
+    background-color: #dceaff;
+    color: rgb(19, 63, 151);
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.hero-text h1 {
+    line-height: 1.3;
+    font-size: 46px;
+    margin-bottom: 15px;
+    color: #142d5e;
+}
+
+.hero-text p {
+    color: #53647e;
+    font-size: 16px;  
+}
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 300px);
+    gap: 20px;
+    
+}
+
+.user-card {
+    padding: 24px 22px;
+    border-radius: 20px;
+    border: 2px solid #6366f1;
+}
+.admin {
+    background-color: #e0e7ff;
+    color: #3730a3;
+    border: 2px solid #a48fff;
+}
+.manager {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 2px solid #6366f1;
+}
+.receptionist {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 2px solid #7fcf9d;
+}
+
+.guest {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 2px solid #bbb95d
+}
+
+
+.user-card h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+.user-card p {
+    font-size: 14px;
+    line-height: 2;
+    min-height: 45px;
+    margin-bottom: 12px;
+}
+.user-btn {
+    padding: 11px;
+    width: 100%;
+    background-color: white;
+    color: inherit;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.user-btn:hover {
+    background-color: #e5e7eb;
+}
