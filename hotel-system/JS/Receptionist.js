@@ -1,18 +1,10 @@
 console.log("Receptionist.js Connected");
-// JS/Receptionist.js - Receptionist owner only.
-// Features: Reservations CRUD, availability check, check-in / check-out, invoice, history.
-// Only things taught in class: arrays of objects, for loop, if/else, switch, getElementById, innerHTML, .style, onclick.
-// Data is kept in arrays (in memory, resets on refresh). In the final term PHP + database will store it.
-// Common.js must be loaded BEFORE this file (it gives showError, clearError, safeText, validateName, validatePhone).
-
-// ---------- DATA (same room types and rooms as the Manager portal) ----------
 let roomTypes = [
     { name: "Standard", price: 50 },
     { name: "Deluxe", price: 90 },
     { name: "Suite", price: 150 }
 ];
 
-// status here only matters for "Maintenance": those rooms cannot be booked
 let rooms = [
     { number: "101", type: "Standard", status: "Available" },
     { number: "102", type: "Standard", status: "Available" },
@@ -20,8 +12,6 @@ let rooms = [
     { number: "301", type: "Suite", status: "Maintenance" }
 ];
 
-// status is one of: Reserved, Checked-in, Checked-out, Cancelled (the badge colours already exist in Style.css)
-// dates are saved as "YYYY-MM-DD" text, so they can be compared with < and >
 let reservations = [
     { id: 1, guest: "Tania Akter", phone: "01855555555", room: "102", checkIn: dayFromToday(-1), checkOut: dayFromToday(2), status: "Checked-in" },
     { id: 2, guest: "Sabbir Hossain", phone: "01966666666", room: "201", checkIn: dayFromToday(-2), checkOut: dayFromToday(1), status: "Checked-in" },
@@ -29,8 +19,8 @@ let reservations = [
     { id: 4, guest: "Karim Uddin", phone: "01712345678", room: "101", checkIn: dayFromToday(-5), checkOut: dayFromToday(-3), status: "Checked-out" }
 ];
 
-// who checked in / out and when (oldest first, shown newest first)
-let actionLog = [
+
+ let actionLog = [
     { time: dayFromToday(-5) + " 14:00", text: "Karim Uddin checked in to room 101" },
     { time: dayFromToday(-3) + " 11:00", text: "Karim Uddin checked out of room 101" },
     { time: dayFromToday(-2) + " 14:10", text: "Sabbir Hossain checked in to room 201" },
@@ -38,10 +28,11 @@ let actionLog = [
 ];
 
 let nextResId = 5;
-let editResId = 0;   // 0 means "adding a new reservation"
+let editResId = 0;   
 
-document.addEventListener("DOMContentLoaded", function () {
-    // after a refresh the browser remembers old search / filter values, so reset them
+document.addEventListener("DOMContentLoaded", function () 
+{
+
     document.getElementById("SearchRes").value = "";
     document.getElementById("FilterRes").value = "All";
     document.getElementById("FilterDesk").value = "All";
@@ -49,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
     refreshAll();
 });
 
-// redraw everything that depends on the data
 function refreshAll() {
     loadRoomOptions();
     showReservationSummary();
@@ -59,8 +49,7 @@ function refreshAll() {
     showLog();
 }
 
-// ---------- MENU: show one section, hide the other ----------
-// used as onclick="return showSection('check')"  (return false keeps the page from jumping)
+
 function showSection(name) {
     document.getElementById("reservationSection").style.display = "none";
     document.getElementById("checkSection").style.display = "none";
@@ -71,13 +60,11 @@ function showSection(name) {
         document.getElementById("menuCheck").className = "active";
     } else {
         document.getElementById("reservationSection").style.display = "block";
-        document.getElementById("menuReservations").className = "active";
+         document.getElementById("menuReservations").className = "active";
     }
     return false;
 }
 
-// ---------- SMALL HELPER FUNCTIONS ----------
-// Date -> "YYYY-MM-DD"
 function formatDate(d) {
     let month = d.getMonth() + 1;
     let day = d.getDate();
@@ -90,7 +77,6 @@ function formatDate(d) {
     return d.getFullYear() + "-" + month + "-" + day;
 }
 
-// date of today + n days (n can be negative)
 function dayFromToday(n) {
     let d = new Date();
     d.setDate(d.getDate() + n);
@@ -101,13 +87,13 @@ function today() {
     return dayFromToday(0);
 }
 
-// number of nights between two "YYYY-MM-DD" dates
+
 function nightsBetween(inDate, outDate) {
     let a = inDate.split("-");
     let b = outDate.split("-");
-    let d1 = new Date(a[0], a[1] - 1, a[2]);
+    let d1 = new Date(a[0], a[1] - 1, a[2]);   
     let d2 = new Date(b[0], b[1] - 1, b[2]);
-    return Math.round((d2 - d1) / 86400000);
+    return Math.round((d2 - d1) / 86400000);   
 }
 
 function getPrice(typeName) {
@@ -137,27 +123,29 @@ function findReservationIndex(id) {
     return -1;
 }
 
-// Is the room already taken in these dates? Returns the index of the reservation in the way, or -1 if free.
-// Two stays overlap when: new check-in < old check-out AND new check-out > old check-in
-// (so a guest can check in on the same day another guest checks out)
 function findConflict(number, inDate, outDate, ignoreId) {
     for (let i = 0; i < reservations.length; i++) {
         let r = reservations[i];
-        if (r.room != number || r.id == ignoreId) {
-            continue;
-        }
-        if (r.status != "Reserved" && r.status != "Checked-in") {
-            continue;
-        }
-        if (inDate < r.checkOut && outDate > r.checkIn) {
-            return i;
+        if (r.room == number && r.id != ignoreId && (r.status == "Reserved" || r.status == "Checked-in")) {
+            if (inDate < r.checkOut && outDate > r.checkIn) {
+                return i;
+            }
         }
     }
     return -1;
 }
 
 function addLog(text) {
-    actionLog.push({ time: new Date().toLocaleString(), text: text });
+    let now = new Date();
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+    actionLog.push({ time: today() + " " + hour + ":" + minute, text: text });
 }
 
 function loadTypeOptions() {
@@ -168,16 +156,24 @@ function loadTypeOptions() {
     document.getElementById("AvailType").innerHTML = text;
 }
 
-// fills the Room drop-down of the reservation form (rooms under maintenance are left out)
+function firstBookableRoom() {
+    for (let i = 0; i < rooms.length; i++) {
+        if (rooms[i].status != "Maintenance") {
+            return rooms[i].number;
+        }
+    }
+    return "";
+}
+
+
 function loadRoomOptions() {
     let select = document.getElementById("ResRoom");
     let old = select.value;
     let text = "";
     for (let i = 0; i < rooms.length; i++) {
-        if (rooms[i].status == "Maintenance") {
-            continue;
+        if (rooms[i].status != "Maintenance") {
+            text += "<option value='" + rooms[i].number + "'>" + rooms[i].number + " (" + rooms[i].type + ", $" + getPrice(rooms[i].type) + "/night)</option>";
         }
-        text += "<option value='" + rooms[i].number + "'>" + rooms[i].number + " (" + rooms[i].type + ", $" + getPrice(rooms[i].type) + "/night)</option>";
     }
     select.innerHTML = text;
     if (old != "") {
@@ -185,7 +181,6 @@ function loadRoomOptions() {
     }
 }
 
-// checks the two date fields and writes the red messages. Same function for the availability form and the reservation form.
 function validateStayDates(inId, outId, inErrorId, outErrorId) {
     let ok = true;
     let inDate = document.getElementById(inId).value;
@@ -212,9 +207,6 @@ function validateStayDates(inId, outId, inErrorId, outErrorId) {
     return ok;
 }
 
-// =====================================================
-//                 AVAILABILITY CHECK
-// =====================================================
 function checkAvailability() {
     let box = document.getElementById("AvailResult");
     box.className = "rec-avail";
@@ -230,16 +222,12 @@ function checkAvailability() {
     let count = 0;
     for (let i = 0; i < rooms.length; i++) {
         let r = rooms[i];
-        if (r.status == "Maintenance") {
-            continue;
-        }
-        if (type != "All" && r.type != type) {
-            continue;
-        }
-        if (findConflict(r.number, inDate, outDate, 0) == -1) {
-            let price = getPrice(r.type);
-            text += "Room " + r.number + " - " + r.type + " - $" + price + " per night (total $" + (price * nights) + ")<br>";
-            count++;
+        if (r.status != "Maintenance" && (type == "All" || r.type == type)) {
+            if (findConflict(r.number, inDate, outDate, 0) == -1) {
+                let price = getPrice(r.type);
+                text += "Room " + r.number + " - " + r.type + " - $" + price + " per night (total $" + (price * nights) + ")<br>";
+                count++;
+            }
         }
     }
     if (count == 0) {
@@ -254,16 +242,13 @@ function checkAvailability() {
 function clearAvailability() {
     document.getElementById("AvailIn").value = "";
     document.getElementById("AvailOut").value = "";
-    document.getElementById("AvailType").selectedIndex = 0;
+    document.getElementById("AvailType").value = "All";
     clearError("AvailInError");
     clearError("AvailOutError");
     document.getElementById("AvailResult").className = "rec-avail";
     document.getElementById("AvailResult").innerHTML = "";
 }
 
-// =====================================================
-//                RESERVATIONS  (CRUD)
-// =====================================================
 function showReservationSummary() {
     let reserved = 0;
     let checkedIn = 0;
@@ -289,7 +274,6 @@ function showReservationSummary() {
     document.getElementById("reservationSummary").innerHTML = text;
 }
 
-// READ: newest reservation first (uses the search box and the status filter)
 function showReservations() {
     let search = document.getElementById("SearchRes").value.trim().toLowerCase();
     let filter = document.getElementById("FilterRes").value;
@@ -298,37 +282,40 @@ function showReservations() {
     let count = 0;
     for (let i = reservations.length - 1; i >= 0; i--) {
         let r = reservations[i];
+        let show = true;
         if (filter != "All" && r.status != filter) {
-            continue;
+            show = false;
         }
         if (search != "" && r.guest.toLowerCase().indexOf(search) == -1 && r.room.indexOf(search) == -1) {
-            continue;
+            show = false;
         }
-        let type = getRoomType(r.room);
-        let nights = nightsBetween(r.checkIn, r.checkOut);
-        text += "<tr>";
-        text += "<td>" + safeText(r.guest) + "</td>";
-        text += "<td>" + r.phone + "</td>";
-        text += "<td>" + r.room + "</td>";
-        text += "<td>" + type + "</td>";
-        text += "<td>" + r.checkIn + "</td>";
-        text += "<td>" + r.checkOut + "</td>";
-        text += "<td>" + nights + "</td>";
-        text += "<td>$" + (nights * getPrice(type)) + "</td>";
-        text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td>";
-        text += "<td>";
-        if (r.status == "Reserved" || r.status == "Cancelled") {
-            text += "<button onclick='editReservation(" + r.id + ")'>Edit</button>";
+        if (show) {
+            let type = getRoomType(r.room);
+            let nights = nightsBetween(r.checkIn, r.checkOut);
+            text += "<tr>";
+            text += "<td>" + safeText(r.guest) + "</td>";
+            text += "<td>" + r.phone + "</td>";
+            text += "<td>" + r.room + "</td>";
+            text += "<td>" + type + "</td>";
+            text += "<td>" + r.checkIn + "</td>";
+            text += "<td>" + r.checkOut + "</td>";
+            text += "<td>" + nights + "</td>";
+            text += "<td>$" + (nights * getPrice(type)) + "</td>";
+            text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td>";
+            text += "<td>";
+            if (r.status == "Reserved" || r.status == "Cancelled") {
+                text += "<button onclick='editReservation(" + r.id + ")'>Edit</button>";
+            }
+            if (r.status == "Reserved") {
+                text += "<button class='light' onclick='cancelReservation(" + r.id + ")'>Cancel</button>";
+            }
+            if (r.status == "Checked-out") {
+                text += "<button onclick='viewInvoice(" + r.id + ")'>Invoice</button>";
+            }
+            text += "<button class='danger' onclick='deleteReservation(" + r.id + ")'>Delete</button>";
+            text += "</td></tr>";
+            count++;
         }
-        if (r.status == "Reserved") {
-            text += "<button class='light' onclick='cancelReservation(" + r.id + ")'>Cancel</button>";
-        }
-        if (r.status == "Checked-out") {
-            text += "<button onclick='viewInvoice(" + r.id + ")'>Invoice</button>";
-        }
-        text += "<button class='danger' onclick='deleteReservation(" + r.id + ")'>Delete</button>";
-        text += "</td></tr>";
-        count++;
     }
     if (count == 0) {
         text += "<tr><td colspan='10'>No reservations found</td></tr>";
@@ -337,7 +324,6 @@ function showReservations() {
     document.getElementById("reservationTable").innerHTML = text;
 }
 
-// VALIDATION for the reservation form
 function validateReservation() {
     let validName = validateName("ResGuest", "ResGuestError", "guest name");
     let validPhone = validatePhone("ResPhone", "ResPhoneError");
@@ -350,7 +336,7 @@ function validateReservation() {
         showError("ResRoomError", "Select a room");
         ok = false;
     } else if (validDates && status == "Reserved") {
-        // a room cannot be booked twice for the same dates
+        
         let inDate = document.getElementById("ResIn").value;
         let outDate = document.getElementById("ResOut").value;
         let conflict = findConflict(room, inDate, outDate, editResId);
@@ -362,8 +348,6 @@ function validateReservation() {
     }
     return ok;
 }
-
-// CREATE and UPDATE (same button: it depends on editResId)
 function saveReservation() {
     document.getElementById("ResMsg").innerHTML = "";
     if (validateReservation() == false) {
@@ -394,8 +378,6 @@ function saveReservation() {
     refreshAll();
     document.getElementById("ResMsg").innerHTML = msg;
 }
-
-// UPDATE step 1: copy the reservation into the form
 function editReservation(id) {
     let index = findReservationIndex(id);
     let r = reservations[index];
@@ -413,10 +395,7 @@ function editReservation(id) {
     clearError("ResInError");
     clearError("ResOutError");
     document.getElementById("ResMsg").innerHTML = "";
-    window.scrollTo(0, 0);
 }
-
-// Cancel a reservation (it stays in the list with the status Cancelled)
 function cancelReservation(id) {
     let index = findReservationIndex(id);
     let name = reservations[index].guest;
@@ -430,8 +409,6 @@ function cancelReservation(id) {
     refreshAll();
     document.getElementById("ResMsg").innerHTML = "Reservation of " + safeText(name) + " cancelled.";
 }
-
-// DELETE
 function deleteReservation(id) {
     let index = findReservationIndex(id);
     let name = reservations[index].guest;
@@ -460,7 +437,7 @@ function clearReservationForm() {
     editResId = 0;
     document.getElementById("ResGuest").value = "";
     document.getElementById("ResPhone").value = "";
-    document.getElementById("ResRoom").selectedIndex = 0;
+    document.getElementById("ResRoom").value = firstBookableRoom();
     document.getElementById("ResIn").value = "";
     document.getElementById("ResOut").value = "";
     document.getElementById("ResStatus").value = "Reserved";
@@ -473,9 +450,6 @@ function clearReservationForm() {
     document.getElementById("ResMode").innerHTML = "Mode: Add new reservation";
 }
 
-// =====================================================
-//               CHECK-IN / CHECK-OUT DESK
-// =====================================================
 function showCheckSummary() {
     let arriving = 0;
     let departing = 0;
@@ -503,8 +477,6 @@ function showCheckSummary() {
     text += "<div class='rec-stat'><b>$" + revenue + "</b>Billed Revenue</div>";
     document.getElementById("checkSummary").innerHTML = text;
 }
-
-// shows only the guests that still need an action: Reserved (check-in) and Checked-in (check-out)
 function showDesk() {
     let filter = document.getElementById("FilterDesk").value;
     let text = "<table class='datatable'>";
@@ -512,27 +484,23 @@ function showDesk() {
     let count = 0;
     for (let i = 0; i < reservations.length; i++) {
         let r = reservations[i];
-        if (r.status != "Reserved" && r.status != "Checked-in") {
-            continue;
+        if ((r.status == "Reserved" || r.status == "Checked-in") && (filter == "All" || r.status == filter)) {
+            text += "<tr>";
+            text += "<td>" + safeText(r.guest) + "</td>";
+            text += "<td>" + r.room + "</td>";
+            text += "<td>" + getRoomType(r.room) + "</td>";
+            text += "<td>" + r.checkIn + "</td>";
+            text += "<td>" + r.checkOut + "</td>";
+            text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td>";
+            text += "<td>";
+            if (r.status == "Reserved") {
+                text += "<button onclick='doCheckIn(" + r.id + ")'>Check-in</button>";
+            } else {
+                text += "<button class='danger' onclick='doCheckOut(" + r.id + ")'>Check-out</button>";
+            }
+            text += "</td></tr>";
+            count++;
         }
-        if (filter != "All" && r.status != filter) {
-            continue;
-        }
-        text += "<tr>";
-        text += "<td>" + safeText(r.guest) + "</td>";
-        text += "<td>" + r.room + "</td>";
-        text += "<td>" + getRoomType(r.room) + "</td>";
-        text += "<td>" + r.checkIn + "</td>";
-        text += "<td>" + r.checkOut + "</td>";
-        text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td>";
-        text += "<td>";
-        if (r.status == "Reserved") {
-            text += "<button onclick='doCheckIn(" + r.id + ")'>Check-in</button>";
-        } else {
-            text += "<button class='danger' onclick='doCheckOut(" + r.id + ")'>Check-out</button>";
-        }
-        text += "</td></tr>";
-        count++;
     }
     if (count == 0) {
         text += "<tr><td colspan='7'>No guests waiting</td></tr>";
@@ -540,18 +508,14 @@ function showDesk() {
     text += "</table>";
     document.getElementById("deskTable").innerHTML = text;
 }
-
-// Reserved -> Checked-in
 function doCheckIn(id) {
     let index = findReservationIndex(id);
     let r = reservations[index];
     document.getElementById("CheckMsg").innerHTML = "";
-    // too early?
     if (r.checkIn > today()) {
         alert("Too early. The check-in date of " + r.guest + " is " + r.checkIn + ".");
         return;
     }
-    // is the old guest of this room still inside?
     for (let i = 0; i < reservations.length; i++) {
         if (reservations[i].room == r.room && reservations[i].status == "Checked-in") {
             alert("Room " + r.room + " still has a guest (" + reservations[i].guest + "). Check that guest out first.");
@@ -563,8 +527,6 @@ function doCheckIn(id) {
     refreshAll();
     document.getElementById("CheckMsg").innerHTML = r.guest + " is checked in to room " + r.room + ".";
 }
-
-// Checked-in -> Checked-out, then show the invoice
 function doCheckOut(id) {
     let index = findReservationIndex(id);
     let r = reservations[index];
@@ -578,10 +540,6 @@ function doCheckOut(id) {
     document.getElementById("CheckMsg").innerHTML = r.guest + " is checked out. The invoice is shown below.";
 }
 
-// =====================================================
-//                       INVOICE
-// =====================================================
-// nights x price of the room type (the booked nights are billed)
 function showInvoice(index) {
     let r = reservations[index];
     let type = getRoomType(r.room);
@@ -601,17 +559,12 @@ function showInvoice(index) {
     document.getElementById("invoiceBox").innerHTML = text;
 }
 
-// "Invoice" button of a checked-out reservation in the reservation list
 function viewInvoice(id) {
     showInvoice(findReservationIndex(id));
     document.getElementById("CheckMsg").innerHTML = "";
     showSection("check");
-    window.scrollTo(0, 0);
 }
 
-// =====================================================
-//               CHECK-IN / CHECK-OUT HISTORY
-// =====================================================
 function showLog() {
     let text = "";
     for (let i = actionLog.length - 1; i >= 0; i--) {
