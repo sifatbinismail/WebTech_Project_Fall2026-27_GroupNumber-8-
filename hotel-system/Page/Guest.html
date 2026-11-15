@@ -1,35 +1,120 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Guest Panel</title>
+
     <link rel="stylesheet" href="../Design/Style.css">
     <link rel="stylesheet" href="../Design/Guest.css">
-    <script src="../JS/Guest.js"></script>
+
+    <script src="../JS/Guest.js" defer></script>
 </head>
+
 <body>
 
-<div class="topbar">
-    <div class="brand">🏨 Hotel RMS <small>Guest Portal</small></div>
-    <div class="topright"><span>Guest</span><a href="../index.html">Logout</a></div>
-</div>
+    <div class="topbar">
+        <div class="brand">
+            🏨 Hotel RMS <small>Guest Portal</small>
+        </div>
+        <div class="topright">
+            <span>Guest</span>
+            <a href="../index.html">Logout</a>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="sidebar">
+            <h4>Guest Menu</h4>
+            <a href="#" class="active" onclick="showSection('booking', this); return false;">Book a Room</a>
+            <a href="#" onclick="showSection('bookings', this); return false;">My Bookings</a>
+            <a href="#" onclick="showSection('feedback', this); return false;">Feedback</a>
 
-<div class="wrap">
-    <div class="sidebar">
-        <h4>Guest Menu</h4>
-        <a class="active" href="Guest.html">Book a Room</a>
-        <a href="#">My Bookings</a>
-        <a href="#">Feedback</a>
+        </div>
+
+        <div class="content">
+            <div class="crumb">Guest</div>
+            <h1 class="title">Guest Panel</h1>
+            <p class="desc">Welcome to Hotel RMS. Book your favourite room with us.</p>
+
+            <section id="bookingSection">
+
+                <div class="card">
+                    <h2>Available Rooms</h2>
+                    <p class="sub"> Search and select your preferred room.</p>
+                    <input type="text" id="roomSearch" placeholder="Search room number or type"
+                        oninput="showAvailableRooms()">
+                    <div id="roomList"></div>
+                </div>
+
+                <div class="card">
+
+                    <h2>Room Reservation</h2>
+
+                    <form id="bookingForm">
+                        <label for="roomSelect">Room Number</label>
+                        <select id="roomSelect">
+                            <option value="">Select a room</option>
+                        </select>
+                        <p class="error" id="roomError"></p>
+
+                        <label for="checkIn">Check-in Date</label>
+                        <input type="date" id="checkIn">
+
+                        <p class="error" id="checkInError"></p>
+
+                        <label for="checkOut">Check-out Date</label>
+                        <input type="date" id="checkOut">
+
+                        <p class="error" id="checkOutError"></p><br>
+
+                        <div id="pricePreview"></div>
+                        <button type="submit">Confirm Booking</button>
+                        <button type="reset" class="light">Reset</button>
+
+                        <p id="bookingMessage" class="ok"></p>
+
+                    </form>
+                </div>
+            </section>
+
+            <!-- MY BOOKINGS SECTION -->
+
+            <section id="bookingsSection" style="display:none;">
+
+                <div class="card">
+                    <h2>My Bookings</h2>
+                    <p class="sub">View your room reservation details.</p>
+
+                    <div id="bookingTable"></div>
+                </div>
+            </section>
+
+            <section id="feedbackSection" style="display:none;">
+                <div class="card">
+                    <h2>Guest Feedback</h2>
+                    <p class="sub">Share your experience</p>
+
+                    <form id="feedbackForm">
+                        <label for="feedbackText">Your Message</label>
+                        <textarea id="feedbackText" rows="5" placeholder="Write your feedback here..."></textarea>
+
+                        <p class="error" id="feedbackError"></p>
+
+                        <button type="submit">Submit Feedback</button>
+
+                        <p id="feedbackMessage" class="ok"></p>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>My Feedback</h2>
+                    <div id="feedbackList"></div>
+                </div>
+            </section>
+        </div>
     </div>
-    <div class="content">
-        <div class="crumb">Guest</div>
-        <h1 class="title">Guest Panel</h1>
-        <p class="desc">TODO (Guest owner): build your pages here. Features: register, search and book, My Bookings (modify/cancel), Feedback CRUD, profile</p>
-        <div class="card"><h2>Coming soon</h2><p class="sub">Copy the card + fieldset layout from ManagerRooms.html.</p></div>
-    </div>
-</div>
-<div class="footer">© 2026 Hotel Reservation System · Guest Portal</div>
 </body>
-!-- This is my first own branch commit --!
+
 </html>
