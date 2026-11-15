@@ -1,4 +1,9 @@
-console.log("Guest.js Connected");
-// JS/Guest.js - Guest owner only.
-// Features: register, search and book, My Bookings (modify/cancel), Feedback CRUD, profile
-// Use only what the course taught: arrays of objects, for loops, if/else, getElementById, innerHTML, onclick.
+let rooms = [
+    { id: 1, number: "101", type: "Standard", floor: 1, status: "Available" },
+    { id: 2, number: "102", type: "Standard", floor: 1, status: "Available" },
+    { id: 3, number: "201", type: "Deluxe", floor: 2, status: "Available" },
+    { id: 4, number: "301", type: "Suite", floor: 3, status: "Available" }
+];
+
+let bookings = [];
+let feedbacks = [];
