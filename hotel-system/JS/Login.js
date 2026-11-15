@@ -1,8 +1,4 @@
 console.log("Login.js Connected");
-
-// Each login page sets  let loginRole = "Manager";  before loading this file.
-// Accounts are kept in an array (no storage). In the final term PHP + database will keep them
-// and the Admin portal will list every new sign-up from the database.
 let accounts = [
     { first: "Admin", last: "User", email: "admin@hotel.com", password: "admin123", birthday: "1990-01-15", phone: "01711111111", role: "Admin", registered: "2026-10-01 09:00" },
     { first: "Sifat", last: "Manager", email: "manager@hotel.com", password: "manager123", birthday: "1992-03-20", phone: "01722222222", role: "Manager", registered: "2026-10-01 09:05" },
