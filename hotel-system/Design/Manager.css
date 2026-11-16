@@ -1,12 +1,167 @@
-/* Mode: Add new room / task eta er style */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #f4f6fb;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: #1f2937;
+}
+
+
+.topbar {
+    overflow: hidden;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e3e8f0;
+    padding: 14px 28px;
+}
+
+.brand {
+    float: left;
+    font-size: 22px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.brand small {
+    font-size: 12px;
+    font-weight: normal;
+    color: #4b5563;
+    margin-left: 10px;
+}
+
+.topright {
+    float: right;
+    font-size: 14px;
+    padding-top: 4px;
+}
+
+.topright span { 
+    color: #4b5563;
+    margin-right: 16px;
+}
+
+.topright a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.topright a:hover {
+    text-decoration: underline;
+}
+
+.wrap {
+    max-width: 1080px;
+    margin: 26px auto;
+    padding: 0 16px;
+    overflow: hidden;
+}
+
+.sidebar {
+    float: left;
+    width: 200px;
+    background-color: #ffffff;
+    border: 1px solid #e3e8f0;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.sidebar h4 {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    color: #1f2937;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: #eaf1ff;
+}
+
+.sidebar a.active {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.content {
+    margin-left: 224px;
+}
+/*Manager/Room er kaj korchi*/
+.crumb {
+    font-size: 11px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.title {
+    margin: 2px  4px;
+    font-size: 30px;
+    color: #0f2a5f;
+}
+
+/* heading er nicher line eita */
+.desc {                                  
+    margin:16px;
+    color: #4b5563;
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    border-top: 1px solid #e3e8f0;
+    padding: 18px;
+    margin-top: 10px;
+}
+
+/* Add/Edit room er vitore box er color sob gular sathe mil rakhchi */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e3e8f0;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 19px;
+    color: #0f2a5f;
+}
+
 .mgr-mode {
-    margin: 10px 0 8px 0;
+    margin: 13px 8px;
     font-size: 13px;
     font-weight: bold;
     color: #2563eb;
 }
 
-/* label gulo input er upore dekhanor jonno */
+fieldset {
+    border: 1px solid #dbe3ee;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 0;
+}
+ /* Room Information kaj tuku */
+legend {
+    background-color: #eaf1ff;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
 label {
     display: block;
     margin-top: 10px;
@@ -14,7 +169,108 @@ label {
     font-size: 14px;
 }
 
-/* input ar dropdown er niche ektu jaiga */
-input, select {
+input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #ffffff;
     margin-bottom: 6px;
+}
+
+/*Sob gula button er kaj korchi*/
+button {
+    padding: 9px 20px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+button.light {
+    background-color: #e5eaf3;
+    color: #1f2937;
+}
+button.light:hover {
+    background-color: #d5ddeb;
+}
+button.danger {
+    background-color: #dc2626;
+}
+button.danger:hover {
+    background-color: #b91c1c;
+}
+ /* action button gula choto korchi*/
+td button {                             
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
+/*room list, task list  er kaj korchi eituku te */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 7px 6px;
+    vertical-align: top;
+    text-align: left;
+}
+/* Room list er room, type, floor eigula gray color dichi*/ 
+.datatable th {                          
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+}
+
+.datatable td {
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+ 
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.Available, .Done {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.Occupied {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.Maintenance, .Pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* message ashe je oigular jonno */
+p.error {
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 3px 0 0 0;
+}
+
+p.ok {
+    color: #166534;
+    font-size: 14px;
+    font-weight: bold;
 }

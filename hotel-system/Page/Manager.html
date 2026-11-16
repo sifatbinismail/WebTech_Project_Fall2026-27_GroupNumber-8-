@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Portal</title>
-    <link rel="stylesheet" href="../Design/Style.css">
     <link rel="stylesheet" href="../Design/Manager.css">
     <script src="../JS/Manager.js"></script>
 </head>
 <body>
 
-<!-- Upor er topbar -->
 <div class="topbar">
     <div class="brand">The Grand Palace<small>Manager Portal</small></div>
     <div class="topright"><span>Manager</span><a href="../index.html">Logout</a></div>
@@ -27,14 +25,11 @@
 
     <!-- Dan pashe main content -->
     <div class="content">
-
-        <!-- Section 1: Rooms -->
         <div id="roomsSection">
             <div class="crumb">Manager / Rooms</div>
             <h1 class="title">Room Management</h1>
             <p class="desc">Add, update and remove hotel rooms.</p>
 
-            <!-- Room add / edit korar form -->
             <div class="card">
                 <h2>Add / Edit Room</h2>
                 <p id="RoomMode" class="mgr-mode">Mode: Add new room</p>
@@ -65,7 +60,6 @@
                 <p class="ok" id="RoomMsg"></p>
             </div>
 
-            <!-- Room er list, search ar filter shoho -->
             <div class="card">
                 <h2>Room List</h2>
                 <p class="sub">Search by room number or filter by status.</p>
@@ -76,17 +70,17 @@
                     <option value="Occupied">Occupied</option>
                     <option value="Maintenance">Maintenance</option>
                 </select>
-                <div id="roomTable"></div>
+                <table class="datatable" id="roomTable">
+                <tr><th>Room No</th><th>Type</th><th>Floor</th><th>Price</th><th>Status</th><th>Action</th></tr>
+                </table>
             </div>
         </div>
 
-        <!-- Section 2: Housekeeping Tasks (shuru te hidden) -->
+        <!-- Housekeeping Tasks age jate na dekhay eijonno korchi -->
         <div id="tasksSection" style="display:none">
             <div class="crumb">Manager / Hotel Care</div>
             <h1 class="title">Housekeeping &amp; Maintenance Tasks</h1>
             <p class="desc">Create tasks for staff, track what is pending and mark finished work as done.</p>
-
-            <!-- Task add / edit korar form -->
             <div class="card">
                 <h2>Add / Edit Task</h2>
                 <p class="sub">The room list comes from the rooms you added.</p>
@@ -117,7 +111,6 @@
                 <p class="ok" id="TaskMsg"></p>
             </div>
 
-            <!-- Task er list -->
             <div class="card">
                 <h2>Task List</h2>
                 <p class="sub">Filter the list by status.</p>
@@ -126,7 +119,9 @@
                     <option value="Pending">Pending</option>
                     <option value="Done">Done</option>
                 </select>
-                <div id="taskTable"></div>
+                <table class="datatable" id="taskTable">
+                <tr><th>Room</th><th>Task</th><th>Assigned To</th><th>Status</th><th>Action</th></tr>
+                </table>
             </div>
         </div>
 

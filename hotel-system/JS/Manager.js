@@ -120,44 +120,39 @@ function loadRoomOptions() {
         select.value = old;
     }
 }
-
-// ================= ROOMS =================
-
-// room er table dekhai (search ar filter onujayi)
+// kotogula room ache dekhbo je oitar kaj ta korchi 
 function showRooms() {
     let search = document.getElementById("SearchRoom").value.trim();
     let filter = document.getElementById("FilterStatus").value;
 
-    let text = "<table class='datatable'>";
-    text += "<tr><th>Room No</th><th>Type</th><th>Floor</th><th>Price</th><th>Status</th><th>Action</th></tr>";
+    let table = document.getElementById("roomTable");
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
 
     let count = 0;
     for (let i = 0; i < rooms.length; i++) {
         let r = rooms[i];
-        // filter er sathe na mille skip kori
         if (filter != "All" && r.status != filter) {
             continue;
         }
-        // search e na pailey skip kori
         if (search != "" && r.number.indexOf(search) == -1) {
             continue;
         }
-        text += "<tr>";
-        text += "<td>" + r.number + "</td>";
-        text += "<td>" + r.type + "</td>";
-        text += "<td>" + r.floor + "</td>";
-        text += "<td>$" + getPrice(r.type) + "</td>";
-        text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td>";
-        text += "<td><button onclick='editRoom(" + r.id + ")'>Edit</button>";
-        text += "<button class='danger' onclick='deleteRoom(" + r.id + ")'>Delete</button></td>";
-        text += "</tr>";
+        let row = table.insertRow();
+        row.insertCell().innerHTML = r.number;
+        row.insertCell().innerHTML = r.type;
+        row.insertCell().innerHTML = r.floor;
+        row.insertCell().innerHTML = "$" + getPrice(r.type);
+        row.insertCell().innerHTML = "<span class='badge " + r.status + "'>" + r.status + "</span>";
+        row.insertCell().innerHTML = "<button onclick='editRoom(" + r.id + ")'>Edit</button><button class='danger' onclick='deleteRoom(" + r.id + ")'>Delete</button>";
         count++;
     }
     if (count == 0) {
-        text += "<tr><td colspan='6'>No rooms found</td></tr>";
+        let cell = table.insertRow().insertCell();
+        cell.colSpan = 6;
+        cell.innerHTML = "No rooms found";
     }
-    text += "</table>";
-    document.getElementById("roomTable").innerHTML = text;
 }
 
 // room form er data thik ache kina dekhi
@@ -186,10 +181,10 @@ function validateRoom() {
         error.innerHTML = "Enter the floor";
         return false;
     }
-    // if (floor < 1 || floor > 20 || floor != Math.floor(floor)) {
-    //     error.innerHTML = "Floor must be a whole number from 1 to 20";
-    //     return false;
-    // }
+     if (floor < 1 || floor > 20 || floor != Math.floor(floor)) {
+        error.innerHTML = "Floor must be a whole number from 1 to 20";
+        return false;
+    }
 
     error.innerHTML = "";
     return true;
@@ -287,7 +282,6 @@ function deleteRoom(id) {
     document.getElementById("RoomMsg").innerHTML = "Room " + number + " deleted.";
 }
 
-// room form ta faka kori
 function clearRoomForm() {
     editRoomId = 0;
     document.getElementById("RoomNumber").value = "";
@@ -299,13 +293,13 @@ function clearRoomForm() {
     document.getElementById("RoomMode").innerHTML = "Mode: Add new room";
 }
 
-// ================= TASKS =================
-
-// task er table dekhai (status filter onujayi)
 function showTasks() {
     let filter = document.getElementById("FilterTask").value;
-    let text = "<table class='datatable'>";
-    text += "<tr><th>Room</th><th>Task</th><th>Assigned To</th><th>Status</th><th>Action</th></tr>";
+
+    let table = document.getElementById("taskTable");
+    while (table.rows.length > 1) {      // header row thakbe, baki muche felbo
+        table.deleteRow(1);
+    }
 
     let count = 0;
     for (let i = 0; i < tasks.length; i++) {
@@ -313,29 +307,29 @@ function showTasks() {
         if (filter != "All" && t.status != filter) {
             continue;
         }
-        text += "<tr>";
-        text += "<td>" + t.room + "</td>";
-        text += "<td>" + t.task + "</td>";
-        text += "<td>" + t.assignedTo + "</td>";
-        text += "<td><span class='badge " + t.status + "'>" + t.status + "</span></td>";
-        text += "<td>";
-        // Mark Done button shudhu pending task e dekhai
+        let buttons = "";
         if (t.status == "Pending") {
-            text += "<button onclick='markDone(" + t.id + ")'>Mark Done</button>";
+            buttons += "<button onclick='markDone(" + t.id + ")'>Mark Done</button>";
         }
-        text += "<button onclick='editTask(" + t.id + ")'>Edit</button>";
-        text += "<button class='danger' onclick='deleteTask(" + t.id + ")'>Delete</button>";
-        text += "</td></tr>";
+        buttons += "<button onclick='editTask(" + t.id + ")'>Edit</button>";
+        buttons += "<button class='danger' onclick='deleteTask(" + t.id + ")'>Delete</button>";
+
+        let row = table.insertRow();
+        row.insertCell().innerHTML = t.room;
+        row.insertCell().innerHTML = t.task;
+        row.insertCell().innerHTML = t.assignedTo;
+        row.insertCell().innerHTML = "<span class='badge " + t.status + "'>" + t.status + "</span>";
+        row.insertCell().innerHTML = buttons;
         count++;
     }
     if (count == 0) {
-        text += "<tr><td colspan='5'>No tasks found</td></tr>";
+        let cell = table.insertRow().insertCell();
+        cell.colSpan = 5;
+        cell.innerHTML = "No tasks found";
     }
-    text += "</table>";
-    document.getElementById("taskTable").innerHTML = text;
 }
 
-// task form er data thik ache kina dekhi
+// task form er data thik ache kina 
 function validateTask() {
     let room = document.getElementById("TaskRoom").value;
     let text = document.getElementById("TaskText").value.trim();
