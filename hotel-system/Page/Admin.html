@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../Design/Admin.css">
     <script src="../JS/Admin.js"></script>
 </head>
-<body>
+<body onload="refreshAll()">
 
 <div class="topbar">
     <div class="brand"> Hotel RMS <small>Admin Portal</small></div>
@@ -19,44 +19,146 @@
 
     <div class="sidebar">
         <h4>Admin Menu</h4>
-        <a class="active" href="Admin.html">New Accounts</a>
-        <a href="#">Room Types</a>
+        <a href="#" id="menuDashboard" class="active" onclick="return showSection('dashboard')">Dashboard</a>
+        <a href="#" id="menuNew" onclick="return showSection('new')">New Accounts</a>
+        <a href="#" id="menuUsers" onclick="return showSection('users')">Manage Users</a>
+        <a href="#" id="menuRooms" onclick="return showSection('rooms')">Rooms</a>
+        <a href="#" id="menuPayments" onclick="return showSection('payments')">Payments</a>
     </div>
 
     <div class="content">
-        <div class="crumb">Admin / Accounts</div>
-        <h1 class="title">New Accounts</h1>
-        <p class="desc">See who has just created an account. The newest sign-ups are at the top.</p>
 
-        <div class="card">
-            <h2>Account Summary</h2>
-            <p class="sub">Counts of all accounts in the list below.</p>
-            <div id="accountSummary"></div>
+        <!-- ================= SECTION 1: DASHBOARD ================= -->
+        <div id="dashboardSection">
+            <div class="crumb">Admin / Overview</div>
+            <h1 class="title">Dashboard</h1>
+            <p class="desc">A quick count of all accounts in the system.</p>
+
+            <div class="card">
+                <h2>Account Summary</h2>
+                <p class="sub">Numbers are calculated from the account list.</p>
+                <div id="summaryBox"></div>
+            </div>
         </div>
 
-<!-- This is my first own branch commit -->
-        <div class="card">
-            <h2>Account List</h2>
-            <p class="sub">Search by name or email, or filter by role.</p>
-            <table class="adm-filter">
-                <tr>
-                    <td><input type="text" id="SearchAccount" onkeyup="showAccounts()" placeholder="Search name or email"></td>
-                    <td>
-                        <select id="FilterRole" onchange="showAccounts()">
-                            <option value="All">All roles</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Manager">Manager</option>
-                            <option value="Receptionist">Receptionist</option>
-                            <option value="Guest">Guest</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-            <p id="AccountMsg" class="ok"></p>
-            <div class="adm-scroll"><div id="accountTable"></div></div>
+        <!-- ================= SECTION 2: NEW ACCOUNTS ================= -->
+        <div id="newSection" style="display:none">
+            <div class="crumb">Admin / Sign Ups</div>
+            <h1 class="title">New Accounts</h1>
+            <p class="desc">Latest sign-ups, newest first. Fields are the same as the sign up form.</p>
+
+            <div class="card">
+                <h2>New Accounts List</h2>
+                <p class="sub">Sample data for now. With PHP + database in the final term, this list will load the real sign-ups.</p>
+                <div id="newTable"></div>
+            </div>
         </div>
+
+        <!-- ================= SECTION 3: MANAGE USERS ================= -->
+        <div id="usersSection" style="display:none">
+            <div class="crumb">Admin / Users</div>
+            <h1 class="title">Manage Users</h1>
+            <p class="desc">Search accounts, disable or enable them and delete them. Admin accounts are protected.</p>
+
+            <div class="card">
+                <h2>All Accounts</h2>
+                <p class="sub">Search by name, email or phone, or filter by role and status.</p>
+                <fieldset>
+                    <legend>Search &amp; Filter</legend>
+                    <table class="adm-filter">
+                        <tr>
+                            <td><input type="text" id="SearchUser" onkeyup="showUsers()" placeholder="Search name, email or phone"></td>
+                            <td>
+                                <select id="FilterRole" onchange="showUsers()">
+                                    <option value="All">All roles</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Receptionist">Receptionist</option>
+                                    <option value="Guest">Guest</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="FilterStatus" onchange="showUsers()">
+                                    <option value="All">All statuses</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Disabled">Disabled</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <p id="UserMsg" class="ok"></p>
+                <div id="userTable"></div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 4: ROOMS (view only) ================= -->
+        <div id="roomsSection" style="display:none">
+            <div class="crumb">Admin / Rooms</div>
+            <h1 class="title">Rooms</h1>
+            <p class="desc">Check all hotel rooms and their status. Rooms are added and edited by the Manager.</p>
+
+            <div class="card">
+                <h2>Room Summary</h2>
+                <p class="sub">Numbers are calculated from the room list.</p>
+                <div id="roomSummary"></div>
+            </div>
+
+            <div class="card">
+                <h2>Room List</h2>
+                <p class="sub">Search by room number or filter by status.</p>
+                <table class="adm-filter">
+                    <tr>
+                        <td><input type="text" id="SearchRoom" onkeyup="showRooms()" placeholder="Search room number"></td>
+                        <td>
+                            <select id="FilterRoomStatus" onchange="showRooms()">
+                                <option value="All">All statuses</option>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div id="roomTable"></div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 5: PAYMENTS ================= -->
+        <div id="paymentsSection" style="display:none">
+            <div class="crumb">Admin / Finance</div>
+            <h1 class="title">Payments</h1>
+            <p class="desc">Review payment records and update their status.</p>
+
+            <div class="card">
+                <h2>Payment Summary</h2>
+                <p class="sub">Collected money counts only payments marked Paid.</p>
+                <div id="paymentSummary"></div>
+            </div>
+
+            <div class="card">
+                <h2>Payment List</h2>
+                <p class="sub">Search by transaction, booking or guest, or filter by status.</p>
+                <table class="adm-filter">
+                    <tr>
+                        <td><input type="text" id="SearchPayment" onkeyup="showPayments()" placeholder="Search transaction, booking or guest"></td>
+                        <td>
+                            <select id="FilterPayStatus" onchange="showPayments()">
+                                <option value="All">All statuses</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Refunded">Refunded</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <p id="PaymentMsg" class="ok"></p>
+                <div id="paymentTable"></div>
+            </div>
+        </div>
+
     </div>
-
 </div>
 <div class="footer">© 2026 Hotel Reservation System · Admin Portal</div>
 </body>
