@@ -1,8 +1,3 @@
-// ======================================================================
-// Common.js - reusable validation functions (same idea as the teacher's Common.js)
-// Loaded by the login pages and the guest registration page.
-// Every validate function returns true (valid) or false (invalid).
-// ======================================================================
 console.log("Common.js Connected");
 
 function showError(errorId, message)
@@ -14,14 +9,11 @@ function clearError(errorId)
 {
     document.getElementById(errorId).innerHTML = "";
 }
-
-// Make user text safe before putting it inside innerHTML
 function safeText(text)
 {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-// Name: required, at least 2 characters, only letters, spaces and dots
 function validateName(inputId, errorId, label)
 {
     let name = document.getElementById(inputId).value.trim();
@@ -46,7 +38,6 @@ function validateName(inputId, errorId, label)
     return true;
 }
 
-// Email: required, must look like something@something.something
 function validateEmail(inputId, errorId)
 {
     let email = document.getElementById(inputId).value.trim();
@@ -66,7 +57,6 @@ function validateEmail(inputId, errorId)
     return true;
 }
 
-// Login password: only has to be filled in
 function validateRequired(inputId, errorId, label)
 {
     let value = document.getElementById(inputId).value;
@@ -79,7 +69,6 @@ function validateRequired(inputId, errorId, label)
     return true;
 }
 
-// New password (registration): 8+ characters, upper case, lower case and a number
 function validatePassword(inputId, errorId)
 {
     let password = document.getElementById(inputId).value;
@@ -132,7 +121,6 @@ function validateConfirmPassword(passwordId, confirmId, errorId)
     return true;
 }
 
-// Phone: Bangladeshi mobile number, 11 digits, starts with 013 - 019 (example: 01712345678)
 function validatePhone(inputId, errorId)
 {
     let phone = document.getElementById(inputId).value.trim();
@@ -152,10 +140,9 @@ function validatePhone(inputId, errorId)
     return true;
 }
 
-// Date of birth: required, not in the future, at least minAge years old
 function validateDOB(inputId, errorId, minAge)
 {
-    let value = document.getElementById(inputId).value;   // format: "YYYY-MM-DD"
+    let value = document.getElementById(inputId).value;
 
     if (value === "")
     {
@@ -164,7 +151,7 @@ function validateDOB(inputId, errorId, minAge)
     }
 
     let parts = value.split("-");
-    let dob = new Date(parts[0], parts[1] - 1, parts[2]);  // month starts from 0 in JS
+    let dob = new Date(parts[0], parts[1] - 1, parts[2]);
     let today = new Date();
 
     if (dob > today)
@@ -173,12 +160,11 @@ function validateDOB(inputId, errorId, minAge)
         return false;
     }
 
-    // calculate age in full years
     let age = today.getFullYear() - dob.getFullYear();
     let monthGap = today.getMonth() - dob.getMonth();
     if (monthGap < 0 || (monthGap === 0 && today.getDate() < dob.getDate()))
     {
-        age--;   // birthday has not come yet this year
+        age--;
     }
 
     if (age < minAge)
@@ -195,8 +181,6 @@ function validateDOB(inputId, errorId, minAge)
     return true;
 }
 
-// The green / red box above the buttons (<div class="resultbox" id="...">)
-// boxId tells which box to use, because a login page has two forms.
 function showResult(isValid, message, boxId)
 {
     let result = document.getElementById(boxId);
@@ -216,7 +200,6 @@ function showResult(isValid, message, boxId)
     }
 }
 
-// Called by <form onreset="clearAllErrors()">
 function clearAllErrors()
 {
     let errors = document.querySelectorAll(".error");

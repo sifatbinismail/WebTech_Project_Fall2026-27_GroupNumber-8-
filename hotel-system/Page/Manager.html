@@ -11,7 +11,7 @@
 <body>
 
 <div class="topbar">
-    <div class="brand">🏨 Hotel RMS <small>Manager Portal</small></div>
+    <div class="brand">The Grand Palace<small>Manager Portal</small></div>
     <div class="topright"><span>Manager</span><a href="../index.html">Logout</a></div>
 </div>
 
@@ -25,7 +25,6 @@
 
     <div class="content">
 
-        <!-- ================= SECTION 1: REPORT & ROOMS ================= -->
         <div id="roomsSection">
             <div class="crumb">Manager / Rooms</div>
             <h1 class="title">Report &amp; Room Management</h1>
@@ -74,7 +73,7 @@
                         </tr>
                     </table>
                     <br>
-                    <button type="button" onclick="saveRoom()">Save Room</button>
+                    <button type="button" onclick="addRoom()">Add Room</button>
                     <button type="button" class="light" onclick="clearRoomForm()">Clear</button>
                 </fieldset>
                 <p id="RoomMsg" class="ok"></p>
@@ -101,7 +100,6 @@
             </div>
         </div>
 
-        <!-- ================= SECTION 2: HOUSEKEEPING TASKS ================= -->
         <div id="tasksSection" style="display:none">
             <div class="crumb">Manager / Hotel Care</div>
             <h1 class="title">Housekeeping &amp; Maintenance Tasks</h1>
@@ -115,7 +113,7 @@
 
             <div class="card">
                 <h2>Add / Edit Task</h2>
-                <p class="sub">The room list comes from the rooms you saved.</p>
+                <p class="sub">The room list comes from the rooms you added.</p>
                 <p id="TaskMode" class="mgr-mode">Mode: Add new task</p>
                 <fieldset>
                     <legend>Task Information</legend>
@@ -152,7 +150,7 @@
                         </tr>
                     </table>
                     <br>
-                    <button type="button" onclick="saveTask()">Save Task</button>
+                    <button type="button" onclick="addTask()">Add Task</button>
                     <button type="button" class="light" onclick="clearTaskForm()">Clear</button>
                 </fieldset>
                 <p id="TaskMsg" class="ok"></p>

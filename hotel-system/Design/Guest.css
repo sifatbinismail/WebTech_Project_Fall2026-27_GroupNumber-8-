@@ -1,1 +1,121 @@
-/* Design/Guest.css - Guest owner only. Start every class name with gst- */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f5fa;
+  margin: 0;
+}
+
+.header {
+  background-color: white;
+  padding: 15px 30px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header h2 {
+  display: inline;
+  color: #2563eb;
+}
+
+/* Sidebar ar main ke pasapashi rakhar jonno */
+.container {
+  display: flex;
+  width: 900px;
+  margin: 25px auto;
+}
+
+.sidebar {
+  height: 200px;
+  width: 200px;
+  background-color: white;
+  padding: 15px;
+  margin-right: 20px;
+  border-radius: 10px;
+  
+}
+
+.sidebar button {
+  
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: none;
+  display: block;
+  background-color: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 15px;
+  
+}
+
+/* Je button select kora ache */
+.sidebar button.active {
+  background-color: #2563eb;
+  color: white;
+  border-radius: 6px;
+}
+
+/* Dan pashe main content */
+.main {
+  flex: 1;
+}
+
+.box {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 120px;
+}
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+
+.blue-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+}
+
+.gray-btn {
+  background-color: #e5e5e5;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+
+.room-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}

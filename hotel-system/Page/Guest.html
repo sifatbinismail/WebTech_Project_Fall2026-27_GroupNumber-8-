@@ -1,34 +1,83 @@
-<!DOCTYPE html>
-<html lang="en-US">
+<!doctype html>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guest Panel</title>
-    <link rel="stylesheet" href="../Design/Style.css">
+    <title>Hotel RMS - Guest Portal</title>
     <link rel="stylesheet" href="../Design/Guest.css">
     <script src="../JS/Guest.js"></script>
 </head>
+
 <body>
 
-<div class="topbar">
-    <div class="brand">🏨 Hotel RMS <small>Guest Portal</small></div>
-    <div class="topright"><span>Guest</span><a href="../index.html">Logout</a></div>
-</div>
+    <!-- Upor er header -->
+    <div class="header">
+        <h2>🏨 Hotel RMS</h2>
+        <span>Guest Portal</span>
+    </div>
 
-<div class="wrap">
-    <div class="sidebar">
-        <h4>Guest Menu</h4>
-        <a class="active" href="Guest.html">Book a Room</a>
-        <a href="#">My Bookings</a>
-        <a href="#">Feedback</a>
+    <div class="container">
+
+        <!-- Bam pashe sidebar, 3 ta button -->
+        <div class="sidebar">
+            <h4>Guest Menu</h4>
+            <button id="btn1" class="active" onclick="showSection('bookSection', 'btn1')">Book a Room</button>
+            <button id="btn2" onclick="showSection('bookingsSection', 'btn2')">My Bookings</button>
+            <button id="btn3" onclick="showSection('feedbackSection', 'btn3')">Feedback</button>
+        </div>
+
+        <!-- Dan pashe main content -->
+        <div class="main">
+            <h1>Guest Panel</h1>
+            <p>Welcome to Hotel RMS. Book your favourite room with us.</p>
+
+            <!-- Section 1: Book a Room -->
+            <div id="bookSection">
+
+                <div class="box">
+                    <h3>Room Reservation</h3>
+
+                    <label>Room Number</label>
+                    <select id="roomSelect">
+                        <option value="">Select a room</option>
+                    </select>
+
+                    <label>Check-in Date</label>
+                    <input type="date" id="checkIn">
+
+                    <label>Check-out Date</label>
+                    <input type="date" id="checkOut">
+
+                    <br><br>
+                    <button class="blue-btn" onclick="confirmBooking()">Confirm Booking</button>
+                    <button class="gray-btn" onclick="resetForm()">Reset</button>
+
+                    <p id="bookMessage"></p>
+                </div>
+
+            </div>
+
+            <!-- Section 2: My Bookings (shuru te hidden) -->
+            <div id="bookingsSection" style="display: none;">
+                <div class="box">
+                    <h3>My Bookings</h3>
+                    <div id="bookingList"></div>
+                </div>
+            </div>
+
+            <!-- Section 3: Feedback (shuru te hidden) -->
+            <div id="feedbackSection" style="display: none;">
+                <div class="box">
+                    <h3>Feedback</h3>
+                    <textarea id="feedbackText" placeholder="Write your feedback here..."></textarea>
+                    <br><br>
+                    <button class="blue-btn" onclick="submitFeedback()">Submit</button>
+                    <p id="feedbackMessage"></p>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="content">
-        <div class="crumb">Guest</div>
-        <h1 class="title">Guest Panel</h1>
-        <p class="desc">TODO (Guest owner): build your pages here. Features: register, search and book, My Bookings (modify/cancel), Feedback CRUD, profile</p>
-        <div class="card"><h2>Coming soon</h2><p class="sub">Copy the card + fieldset layout from ManagerRooms.html.</p></div>
-    </div>
-</div>
-<div class="footer">© 2026 Hotel Reservation System · Guest Portal</div>
+
 </body>
+
 </html>

@@ -1,391 +1,76 @@
 console.log("Admin.js Connected");
-// JS/Admin.js - Member 1 (Admin portal: Dashboard, New Accounts, Manage Users, Rooms view, Payments)
-// Only things taught in class: arrays of objects, for loop, if/else, switch, getElementById, innerHTML, .style, onclick.
-// Data is kept in an array (in memory, resets on refresh). Sign-ups from the login pages cannot reach this page yet,
-// so sample data is used. In the final term PHP + database will load the real accounts.
 
-//  DATA (same fields as the sign up form; passwords are never shown) ----------
-// the list is oldest first, so the newest account is the LAST item
+/* Phase 1: Admin-only demonstration copies. These arrays are NOT live shared data. */
 let adminAccounts = [
-    { id: 1, first: "Admin", last: "User", email: "admin@hotel.com", birthday: "1990-01-15", phone: "01711111111", role: "Admin", registered: "2026-10-01 09:00", status: "Active" },
-    { id: 2, first: "sifat", last: "Manager", email: "manager@hotel.com", birthday: "1992-03-20", phone: "01722222222", role: "Manager", registered: "2026-10-01 09:05", status: "Active" },
-    { id: 3, first: "Rafi", last: "Reception", email: "reception@hotel.com", birthday: "1995-07-08", phone: "01733333333", role: "Receptionist", registered: "2026-10-01 09:10", status: "Active" },
-    { id: 4, first: "Guest", last: "User", email: "guest@hotel.com", birthday: "1998-11-30", phone: "01744444444", role: "Guest", registered: "2026-10-01 09:15", status: "Active" },
-    { id: 5, first: "Nadia", last: "Akter", email: "nadia@example.com", birthday: "2000-05-12", phone: "01755555555", role: "Guest", registered: "2026-11-08 14:20", status: "Active" },
-    { id: 6, first: "Tanvir", last: "Hasan", email: "tanvir@example.com", birthday: "1997-09-03", phone: "01866666666", role: "Guest", registered: "2026-11-10 11:45", status: "Active" },
-    { id: 7, first: "Sara", last: "Islam", email: "sara@example.com", birthday: "2001-02-25", phone: "01977777777", role: "Guest", registered: "2026-11-12 16:30", status: "Disabled" },
-    { id: 8, first: "Arif", last: "Rahman", email: "arif@example.com", birthday: "1994-12-18", phone: "01688888888", role: "Receptionist", registered: "2026-11-14 10:05", status: "Active" }
+ {first:"Admin",last:"User",email:"admin@hotel.com",phone:"01711111111",role:"Admin",status:"Active"},
+ {first:"Sifat",last:"Manager",email:"manager@hotel.com",phone:"01722222222",role:"Manager",status:"Active"},
+ {first:"Meskat",last:"Reception",email:"reception@hotel.com",phone:"01733333333",role:"Receptionist",status:"Active"},
+ {first:"Guest",last:"User",email:"guest@hotel.com",phone:"01744444444",role:"Guest",status:"Active"}
 ];
-
-// same room types and rooms as Manager.js (the Manager adds/edits rooms, Admin only views them)
-let roomTypes = [
-    { name: "Standard", price: 50 },
-    { name: "Deluxe", price: 90 },
-    { name: "Suite", price: 150 }
+let adminRooms = [
+ {id:1,number:"101",type:"Standard",floor:1,status:"Available"},
+ {id:2,number:"102",type:"Standard",floor:1,status:"Occupied"},
+ {id:3,number:"201",type:"Deluxe",floor:2,status:"Occupied"},
+ {id:4,number:"301",type:"Suite",floor:3,status:"Maintenance"}
 ];
-
-let rooms = [
-    { id: 1, number: "101", type: "Standard", floor: 1, status: "Available" },
-    { id: 2, number: "102", type: "Standard", floor: 1, status: "Occupied" },
-    { id: 3, number: "201", type: "Deluxe", floor: 2, status: "Occupied" },
-    { id: 4, number: "301", type: "Suite", floor: 3, status: "Maintenance" }
+let adminTasks = [
+ {id:1,room:"301",task:"Fix air conditioner",assignedTo:"Karim",status:"Pending"},
+ {id:2,room:"101",task:"Clean bathroom",assignedTo:"Rina",status:"Done"}
 ];
-
-// sample payments (no Receptionist/Guest data exists yet; real records will come from the database)
-let payments = [
-    { id: "TXN-9001", booking: "BK-1001", guest: "Nadia Akter", room: "102", method: "Card", amount: 100, date: "2026-11-09", status: "Paid" },
-    { id: "TXN-9002", booking: "BK-1002", guest: "Tanvir Hasan", room: "201", method: "Mobile Banking", amount: 180, date: "2026-11-12", status: "Pending" },
-    { id: "TXN-9003", booking: "BK-1003", guest: "Arif Rahman", room: "101", method: "Cash", amount: 50, date: "2026-10-20", status: "Paid" }
+function adminDate(offset){let d=new Date();d.setDate(d.getDate()+offset);let m=d.getMonth()+1;let day=d.getDate();if(m<10)m="0"+m;if(day<10)day="0"+day;return d.getFullYear()+"-"+m+"-"+day;}
+let adminReservations = [
+ {id:1,guest:"Tania Akter",phone:"01855555555",room:"102",checkIn:adminDate(-1),checkOut:adminDate(2),status:"Checked-in"},
+ {id:2,guest:"Sabbir Hossain",phone:"01966666666",room:"201",checkIn:adminDate(-2),checkOut:adminDate(1),status:"Checked-in"},
+ {id:3,guest:"Nadia Islam",phone:"01577777777",room:"101",checkIn:adminDate(0),checkOut:adminDate(3),status:"Reserved"},
+ {id:4,guest:"Karim Uddin",phone:"01712345678",room:"101",checkIn:adminDate(-5),checkOut:adminDate(-3),status:"Checked-out"}
 ];
-
-//  MENU: show one section, hide the others 
-// used as onclick="return showSection('new')"  (return false keeps the page from jumping)
-function showSection(name) {
-    let sections = ["dashboardSection", "newSection", "usersSection", "roomsSection", "paymentsSection"];
-    let menus = ["menuDashboard", "menuNew", "menuUsers", "menuRooms", "menuPayments"];
-    let pick = 0;
-
-    switch (name) {
-        case "new":
-            pick = 1;
-            break;
-        case "users":
-            pick = 2;
-            break;
-        case "rooms":
-            pick = 3;
-            break;
-        case "payments":
-            pick = 4;
-            break;
-        default:
-            pick = 0;
-    }
-
-    for (let i = 0; i < sections.length; i++) {
-        document.getElementById(sections[i]).style.display = "none";
-        document.getElementById(menus[i]).className = "";
-    }
-    document.getElementById(sections[pick]).style.display = "block";
-    document.getElementById(menus[pick]).className = "active";
-    return false;
-}
-
-// redraw everything that depends on the data
-function refreshAll() {
-    showSummary();
-    showNewAccounts();
-    showUsers();
-    showRoomSummary();
-    showRooms();
-    showPaymentSummary();
-    showPayments();
-}
-
-function getPrice(typeName) {
-    for (let i = 0; i < roomTypes.length; i++) {
-        if (roomTypes[i].name == typeName) {
-            return roomTypes[i].price;
-        }
-    }
-    return 0;
-}
-
-function findAccountIndex(id) {
-    for (let i = 0; i < adminAccounts.length; i++) {
-        if (adminAccounts[i].id == id) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-
-// DASHBOARD
-
-function showSummary() {
-    let active = 0;
-    let disabled = 0;
-    let managers = 0;
-    let receptionists = 0;
-    let guests = 0;
-
-    for (let i = 0; i < adminAccounts.length; i++) {
-        if (adminAccounts[i].status == "Active") {
-            active++;
-        } else {
-            disabled++;
-        }
-        if (adminAccounts[i].role == "Manager") {
-            managers++;
-        } else if (adminAccounts[i].role == "Receptionist") {
-            receptionists++;
-        } else if (adminAccounts[i].role == "Guest") {
-            guests++;
-        }
-    }
-
-    document.getElementById("summaryBox").innerHTML =
-        "<div class='adm-stat'>Total Accounts<b>" + adminAccounts.length + "</b></div>" +
-        "<div class='adm-stat'>Active<b>" + active + "</b></div>" +
-        "<div class='adm-stat'>Disabled<b>" + disabled + "</b></div>" +
-        "<div class='adm-stat'>Managers<b>" + managers + "</b></div>" +
-        "<div class='adm-stat'>Receptionists<b>" + receptionists + "</b></div>" +
-        "<div class='adm-stat'>Guests<b>" + guests + "</b></div>";
-}
-
-
-//NEW ACCOUNTS (newest first)
-
-function showNewAccounts() {
-    let text = "<table class='datatable'><tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Birthday</th><th>Phone</th><th>Role</th><th>Registered</th></tr>";
-    let count = 0;
-
-    // loop from the END of the array so the newest account comes first (show the latest 5)
-    for (let i = adminAccounts.length - 1; i >= 0 && count < 5; i--) {
-        let a = adminAccounts[i];
-        text += "<tr><td>" + a.first + "</td><td>" + a.last + "</td><td>" + a.email + "</td><td>" + a.birthday + "</td><td>" + a.phone + "</td><td>" + a.role + "</td><td>" + a.registered + "</td></tr>";
-        count++;
-    }
-    if (count == 0) {
-        text += "<tr><td colspan='7'>No accounts yet.</td></tr>";
-    }
-    document.getElementById("newTable").innerHTML = text + "</table>";
-}
-
-// MANAGE USERS
-
-function showUsers() {
-    let search = document.getElementById("SearchUser").value.trim().toLowerCase();
-    let role = document.getElementById("FilterRole").value;
-    let status = document.getElementById("FilterStatus").value;
-    let text = "<table class='datatable'><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Actions</th></tr>";
-    let count = 0;
-
-    for (let i = adminAccounts.length - 1; i >= 0; i--) {
-        let a = adminAccounts[i];
-        let name = a.first + " " + a.last;
-
-        if (role != "All" && a.role != role) {
-            continue;
-        }
-        if (status != "All" && a.status != status) {
-            continue;
-        }
-        if (search != "" && name.toLowerCase().indexOf(search) == -1 && a.email.toLowerCase().indexOf(search) == -1 && a.phone.indexOf(search) == -1) {
-            continue;
-        }
-
-        text += "<tr><td>" + name + "</td><td>" + a.email + "</td><td>" + a.phone + "</td><td>" + a.role + "</td>";
-        text += "<td><span class='badge " + a.status + "'>" + a.status + "</span></td><td>";
-        if (a.role == "Admin") {
-            text += "<span class='adm-protected'>Protected</span>";
-        } else {
-            let label = "Disable";
-            if (a.status == "Disabled") {
-                label = "Enable";
-            }
-            text += "<button type='button' class='light' onclick='changeStatus(" + a.id + ")'>" + label + "</button>";
-            text += "<button type='button' class='danger' onclick='deleteUser(" + a.id + ")'>Delete</button>";
-        }
-        text += "</td></tr>";
-        count++;
-    }
-    if (count == 0) {
-        text += "<tr><td colspan='6'>No accounts found.</td></tr>";
-    }
-    document.getElementById("userTable").innerHTML = text + "</table>";
-}
-
-function changeStatus(id) {
-    let index = findAccountIndex(id);
-    if (index == -1 || adminAccounts[index].role == "Admin") {
-        return;
-    }
-    if (adminAccounts[index].status == "Active") {
-        adminAccounts[index].status = "Disabled";
-    } else {
-        adminAccounts[index].status = "Active";
-    }
-    document.getElementById("UserMsg").innerHTML = "Account status updated.";
-    refreshAll();
-}
-
-function deleteUser(id) {
-    let index = findAccountIndex(id);
-    if (index == -1 || adminAccounts[index].role == "Admin") {
-        return;
-    }
-    if (!confirm("Delete " + adminAccounts[index].first + " " + adminAccounts[index].last + "?")) {
-        return;
-    }
-    // rebuild the array without this account (no splice needed)
-    let rest = [];
-    for (let i = 0; i < adminAccounts.length; i++) {
-        if (i != index) {
-            rest.push(adminAccounts[i]);
-        }
-    }
-    adminAccounts = rest;
-    document.getElementById("UserMsg").innerHTML = "Account deleted.";
-    refreshAll();
-}
-
-
-// ROOMS (view only)
-
-function showRoomSummary() {
-    let available = 0;
-    let occupied = 0;
-    let maintenance = 0;
-
-    for (let i = 0; i < rooms.length; i++) {
-        if (rooms[i].status == "Available") {
-            available++;
-        } else if (rooms[i].status == "Occupied") {
-            occupied++;
-        } else {
-            maintenance++;
-        }
-    }
-    let rate = 0;
-    if (rooms.length > 0) {
-        rate = Math.round(occupied / rooms.length * 100);
-    }
-
-    document.getElementById("roomSummary").innerHTML =
-        "<div class='adm-stat'>Total Rooms<b>" + rooms.length + "</b></div>" +
-        "<div class='adm-stat'>Available<b>" + available + "</b></div>" +
-        "<div class='adm-stat'>Occupied<b>" + occupied + "</b></div>" +
-        "<div class='adm-stat'>Maintenance<b>" + maintenance + "</b></div>" +
-        "<div class='adm-stat'>Occupancy<b>" + rate + "%</b></div>";
-}
-
-function showRooms() {
-    let search = document.getElementById("SearchRoom").value.trim();
-    let status = document.getElementById("FilterRoomStatus").value;
-    let text = "<table class='datatable'><tr><th>Room</th><th>Type</th><th>Floor</th><th>Price / Night</th><th>Status</th></tr>";
-    let count = 0;
-
-    for (let i = 0; i < rooms.length; i++) {
-        let r = rooms[i];
-        if (search != "" && r.number.indexOf(search) == -1) {
-            continue;
-        }
-        if (status != "All" && r.status != status) {
-            continue;
-        }
-        text += "<tr><td>" + r.number + "</td><td>" + r.type + "</td><td>" + r.floor + "</td><td>$" + getPrice(r.type) + "</td>";
-        text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td></tr>";
-        count++;
-    }
-    if (count == 0) {
-        text += "<tr><td colspan='5'>No rooms found.</td></tr>";
-    }
-    document.getElementById("roomTable").innerHTML = text + "</table>";
-}
-
-
-//PAYMENTS
-
-function showPaymentSummary() {
-    let paid = 0;
-    let pending = 0;
-    let refunded = 0;
-    let collected = 0;
-
-    for (let i = 0; i < payments.length; i++) {
-        if (payments[i].status == "Paid") {
-            paid++;
-            collected += payments[i].amount;
-        } else if (payments[i].status == "Pending") {
-            pending++;
-        } else {
-            refunded++;
-        }
-    }
-
-    document.getElementById("paymentSummary").innerHTML =
-        "<div class='adm-stat'>Transactions<b>" + payments.length + "</b></div>" +
-        "<div class='adm-stat'>Paid<b>" + paid + "</b></div>" +
-        "<div class='adm-stat'>Pending<b>" + pending + "</b></div>" +
-        "<div class='adm-stat'>Refunded<b>" + refunded + "</b></div>" +
-        "<div class='adm-stat'>Collected<b>$" + collected + "</b></div>";
-}
-
-function showPayments() {
-    let search = document.getElementById("SearchPayment").value.trim().toLowerCase();
-    let status = document.getElementById("FilterPayStatus").value;
-    let text = "<table class='datatable'><tr><th>Transaction</th><th>Booking</th><th>Guest</th><th>Room</th><th>Method</th><th>Date</th><th>Amount</th><th>Status</th><th>Change</th></tr>";
-    let count = 0;
-
-    for (let i = payments.length - 1; i >= 0; i--) {
-        let p = payments[i];
-        if (status != "All" && p.status != status) {
-            continue;
-        }
-        if (search != "" && p.id.toLowerCase().indexOf(search) == -1 && p.booking.toLowerCase().indexOf(search) == -1 && p.guest.toLowerCase().indexOf(search) == -1) {
-            continue;
-        }
-        text += "<tr><td>" + p.id + "</td><td>" + p.booking + "</td><td>" + p.guest + "</td><td>" + p.room + "</td><td>" + p.method + "</td><td>" + p.date + "</td><td>$" + p.amount + "</td>";
-        text += "<td><span class='badge " + p.status + "'>" + p.status + "</span></td>";
-        text += "<td><select onchange='changePayment(\"" + p.id + "\", this.value)'><option value=''>Update</option><option value='Paid'>Paid</option><option value='Pending'>Pending</option><option value='Refunded'>Refunded</option></select></td></tr>";
-        count++;
-    }
-    if (count == 0) {
-        text += "<tr><td colspan='9'>No payments found.</td></tr>";
-    }
-    document.getElementById("paymentTable").innerHTML = text + "</table>";
-}
-
-function changePayment(id, status) {
-    if (status == "") {
-        return;
-    }
-    for (let i = 0; i < payments.length; i++) {
-        if (payments[i].id == id) {
-            payments[i].status = status;
-        }
-    }
-    document.getElementById("PaymentMsg").innerHTML = "Payment " + id + " is now " + status + ".";
-    refreshAll();
-}
-
-const defaultAccounts = [
-  { id: 1, name: "Arif Rahman", email: "arif@example.com", phone: "01688888888", role: "Receptionist", status: "Active" },
-  // baki gula...
+let adminPayments = [
+ {id:1,booking:1,guest:"Tania Akter",amount:150,method:"Cash",status:"Paid"},
+ {id:2,booking:2,guest:"Sabbir Hossain",amount:270,method:"Card",status:"Unpaid"},
+ {id:3,booking:3,guest:"Nadia Islam",amount:150,method:"Mobile Banking",status:"Unpaid"}
 ];
+let adminFeedback = [
+ {id:1,guest:"Tania Akter",text:"The room was clean and comfortable.",status:"New"},
+ {id:2,guest:"Sabbir Hossain",text:"The front desk service was helpful.",status:"Reviewed"}
+];
+let editAccount=-1,editRoom=-1,editTask=-1,editReservationIndex=-1;
+function initAdmin(){showAdminDashboard();showAccounts();showRooms();showTasks();showReservations();showFrontDesk();showPayments();showFeedback();}
+function showAdminSection(name){let names=["dashboard","accounts","rooms","reservations","frontdesk","feedback"];let ids=["admDashboardSection","admAccountsSection","admRoomsSection","admReservationsSection","admFrontdeskSection","admFeedbackSection"];let menus=["admMenuDashboard","admMenuAccounts","admMenuRooms","admMenuReservations","admMenuFrontdesk","admMenuFeedback"];for(let i=0;i<ids.length;i++){document.getElementById(ids[i]).style.display="none";document.getElementById(menus[i]).className="";}let index=names.indexOf(name);if(index<0)index=0;document.getElementById(ids[index]).style.display="block";document.getElementById(menus[index]).className="active";return false;}
+function safeAdminText(value){let s="";value=String(value);for(let i=0;i<value.length;i++){if(value[i]=="&")s+="&amp;";else if(value[i]=="<")s+="&lt;";else if(value[i]==">")s+="&gt;";else if(value[i]=="\"")s+="&quot;";else if(value[i]=="'")s+="&#039;";else s+=value[i];}return s;}
+function removeAdminItem(list,index){for(let i=index;i<list.length-1;i++){list[i]=list[i+1];}list.length=list.length-1;}
+function showAdminDashboard(){document.getElementById("dashAccounts").innerHTML=adminAccounts.length;document.getElementById("dashRooms").innerHTML=adminRooms.length;document.getElementById("dashReservations").innerHTML=adminReservations.length;document.getElementById("dashPayments").innerHTML=adminPayments.length;let a=0,o=0,m=0;for(let i=0;i<adminRooms.length;i++){if(adminRooms[i].status=="Available")a++;else if(adminRooms[i].status=="Occupied")o++;else m++;}document.getElementById("dashRoomSummary").innerHTML="<p>Available: <b>"+a+"</b></p><p>Occupied: <b>"+o+"</b></p><p>Maintenance: <b>"+m+"</b></p>";let r="";for(let i=0;i<adminReservations.length;i++){r+="<p>"+safeAdminText(adminReservations[i].status)+": <b>"+safeAdminText(adminReservations[i].guest)+"</b></p>";}document.getElementById("dashReservationSummary").innerHTML=r;let recent="<table class='datatable adm-table'><tr><th>Guest</th><th>Room</th><th>Activity</th></tr>";for(let i=0;i<adminReservations.length;i++){recent+="<tr><td>"+safeAdminText(adminReservations[i].guest)+"</td><td>"+safeAdminText(adminReservations[i].room)+"</td><td>"+safeAdminText(adminReservations[i].status)+"</td></tr>";}document.getElementById("dashRecent").innerHTML=recent+"</table>";}
 
-function getAccounts() {
-  const saved = localStorage.getItem("accounts");
-  if (!saved) {
-    localStorage.setItem("accounts", JSON.stringify(defaultAccounts));
-    return [...defaultAccounts];
-  }
-  return JSON.parse(saved);
-}
+function openAccountForm(){editAccount=-1;document.getElementById("accountForm").style.display="block";document.getElementById("accountFormTitle").innerHTML="Add Account";clearAccountInputs();}
+function clearAccountInputs(){document.getElementById("accFirst").value="";document.getElementById("accLast").value="";document.getElementById("accEmail").value="";document.getElementById("accPhone").value="";document.getElementById("accRole").value="Guest";document.getElementById("accStatus").value="Active";document.getElementById("accError").innerHTML="";}
+function cancelAccountForm(){document.getElementById("accountForm").style.display="none";clearAccountInputs();editAccount=-1;}
+function saveAccount(){let f=document.getElementById("accFirst").value.trim(),l=document.getElementById("accLast").value.trim(),e=document.getElementById("accEmail").value.trim(),p=document.getElementById("accPhone").value.trim(),role=document.getElementById("accRole").value,st=document.getElementById("accStatus").value,err="";if(f==""||l==""||e==""||p=="")err="Please complete all fields.";else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))err="Enter a valid email.";else if(!/^01[3-9][0-9]{8}$/.test(p))err="Enter a valid 11-digit Bangladesh phone number.";for(let i=0;i<adminAccounts.length;i++){if(adminAccounts[i].email==e&&i!=editAccount)err="This email already exists.";}document.getElementById("accError").innerHTML=err;if(err!="")return;if(editAccount==-1)adminAccounts.push({first:f,last:l,email:e,phone:p,role:role,status:st});else{adminAccounts[editAccount].first=f;adminAccounts[editAccount].last=l;adminAccounts[editAccount].email=e;adminAccounts[editAccount].phone=p;adminAccounts[editAccount].role=role;adminAccounts[editAccount].status=st;}cancelAccountForm();showAccounts();showAdminDashboard();}
+function showAccounts(){let q=document.getElementById("accSearch").value.trim(),filter=document.getElementById("accFilter").value,t="<table class='datatable adm-table'><tr><th>Name / Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Actions</th></tr>",n=0;for(let i=0;i<adminAccounts.length;i++){let x=adminAccounts[i],hay=(x.first+" "+x.last+" "+x.email+" "+x.phone);if((filter=="All"||filter==x.role)&&hay.indexOf(q)!=-1){n++;t+="<tr><td><b>"+safeAdminText(x.first+" "+x.last)+"</b><br><small>"+safeAdminText(x.email)+"</small></td><td>"+safeAdminText(x.phone)+"</td><td>"+safeAdminText(x.role)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editAccountRecord("+i+")'>Edit</button> <button class='light adm-action-btn' onclick='toggleAccount("+i+")'>"+(x.status=="Active"?"Disable":"Enable")+"</button> <button class='danger adm-action-btn' onclick='deleteAccount("+i+")'>Delete</button></td></tr>";}}if(n==0)t+="<tr><td colspan='5'>No account records.</td></tr>";document.getElementById("accountTable").innerHTML=t+"</table>";}
+function editAccountRecord(i){editAccount=i;let x=adminAccounts[i];document.getElementById("accountForm").style.display="block";document.getElementById("accountFormTitle").innerHTML="Edit Account";document.getElementById("accFirst").value=x.first;document.getElementById("accLast").value=x.last;document.getElementById("accEmail").value=x.email;document.getElementById("accPhone").value=x.phone;document.getElementById("accRole").value=x.role;document.getElementById("accStatus").value=x.status;}
+function toggleAccount(i){if(adminAccounts[i].status=="Active")adminAccounts[i].status="Disabled";else adminAccounts[i].status="Active";showAccounts();}
+function deleteAccount(i){if(adminAccounts[i].role=="Admin"){alert("Admin account cannot be deleted in this demo.");return;}if(confirm("Delete this sample account?")){removeAdminItem(adminAccounts,i);showAccounts();showAdminDashboard();}}
 
-function saveAccounts(list) {
-  localStorage.setItem("accounts", JSON.stringify(list));
-}
+function showRooms(){let t="<table class='datatable adm-table'><tr><th>Room</th><th>Type</th><th>Floor</th><th>Status</th><th>Actions</th></tr>";for(let i=0;i<adminRooms.length;i++){let x=adminRooms[i];t+="<tr><td>"+safeAdminText(x.number)+"</td><td>"+safeAdminText(x.type)+"</td><td>"+x.floor+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editRoomRecord("+i+")'>Edit</button> <button class='danger adm-action-btn' onclick='deleteRoom("+i+")'>Delete</button></td></tr>";}document.getElementById("roomTable").innerHTML=t+"</table>";}
+function saveRoom(){let no=document.getElementById("roomNumber").value.trim(),type=document.getElementById("roomType").value,floor=document.getElementById("roomFloor").value,st=document.getElementById("roomStatus").value,err="";if(no==""||floor=="")err="Enter room number and floor.";else if(floor<1||floor>20||floor!=Math.floor(floor))err="Floor must be a whole number from 1 to 20.";for(let i=0;i<adminRooms.length;i++)if(adminRooms[i].number==no&&i!=editRoom)err="Room number already exists.";document.getElementById("roomError").innerHTML=err;if(err!="")return;if(editRoom==-1)adminRooms.push({id:adminRooms.length+1,number:no,type:type,floor:floor*1,status:st});else{adminRooms[editRoom].number=no;adminRooms[editRoom].type=type;adminRooms[editRoom].floor=floor*1;adminRooms[editRoom].status=st;}clearRoomForm();showRooms();showAdminDashboard();}
+function editRoomRecord(i){editRoom=i;let x=adminRooms[i];document.getElementById("roomNumber").value=x.number;document.getElementById("roomType").value=x.type;document.getElementById("roomFloor").value=x.floor;document.getElementById("roomStatus").value=x.status;document.getElementById("roomFormTitle").innerHTML="Edit Room";}
+function deleteRoom(i){if(confirm("Delete room "+adminRooms[i].number+"?")){removeAdminItem(adminRooms,i);clearRoomForm();showRooms();showAdminDashboard();}}
+function clearRoomForm(){editRoom=-1;document.getElementById("roomNumber").value="";document.getElementById("roomFloor").value="";document.getElementById("roomError").innerHTML="";document.getElementById("roomFormTitle").innerHTML="Add / Edit Room";}
+function showTasks(){let t="<table class='datatable adm-table'><tr><th>Room</th><th>Task</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr>";for(let i=0;i<adminTasks.length;i++){let x=adminTasks[i];t+="<tr><td>"+safeAdminText(x.room)+"</td><td>"+safeAdminText(x.task)+"</td><td>"+safeAdminText(x.assignedTo)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editTaskRecord("+i+")'>Edit</button> <button class='danger adm-action-btn' onclick='deleteTask("+i+")'>Delete</button></td></tr>";}document.getElementById("taskTable").innerHTML=t+"</table>";}
+function saveTask(){let room=document.getElementById("taskRoom").value.trim(),task=document.getElementById("taskName").value.trim(),worker=document.getElementById("taskWorker").value.trim(),st=document.getElementById("taskStatus").value,err="";if(room==""||task==""||worker=="")err="Complete all housekeeping task fields.";document.getElementById("taskError").innerHTML=err;if(err!="")return;if(editTask==-1)adminTasks.push({id:adminTasks.length+1,room:room,task:task,assignedTo:worker,status:st});else{adminTasks[editTask].room=room;adminTasks[editTask].task=task;adminTasks[editTask].assignedTo=worker;adminTasks[editTask].status=st;}clearTaskForm();showTasks();}
+function editTaskRecord(i){editTask=i;let x=adminTasks[i];document.getElementById("taskRoom").value=x.room;document.getElementById("taskName").value=x.task;document.getElementById("taskWorker").value=x.assignedTo;document.getElementById("taskStatus").value=x.status;}
+function deleteTask(i){removeAdminItem(adminTasks,i);showTasks();}
+function clearTaskForm(){editTask=-1;document.getElementById("taskRoom").value="";document.getElementById("taskName").value="";document.getElementById("taskWorker").value="";document.getElementById("taskStatus").value="Pending";document.getElementById("taskError").innerHTML="";}
 
-
-
-function deleteAccount(id) {
-  let accounts = getAccounts();
-  accounts = accounts.filter(a => a.id !== id);
-  saveAccounts(accounts);   // eta must
-  renderAccounts();
-}
-
-function toggleStatus(id) {
-  const accounts = getAccounts();
-  const acc = accounts.find(a => a.id === id);
-  acc.status = acc.status === "Active" ? "Disabled" : "Active";
-  saveAccounts(accounts);   
-  renderAccounts();
-}
-
-
-
-
+function showReservations(){let t="<table class='datatable adm-table'><tr><th>ID</th><th>Guest / Phone</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Actions</th></tr>";for(let i=0;i<adminReservations.length;i++){let x=adminReservations[i];t+="<tr><td>"+x.id+"</td><td>"+safeAdminText(x.guest)+"<br>"+safeAdminText(x.phone)+"</td><td>"+safeAdminText(x.room)+"</td><td>"+x.checkIn+"</td><td>"+x.checkOut+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editReservationRecord("+i+")'>Edit</button> <button class='danger adm-action-btn' onclick='deleteReservation("+i+")'>Delete</button></td></tr>";}document.getElementById("reservationTable").innerHTML=t+"</table>";}
+function saveReservation(){let guest=document.getElementById("resGuest").value.trim(),phone=document.getElementById("resPhone").value.trim(),room=document.getElementById("resRoom").value.trim(),ci=document.getElementById("resIn").value,co=document.getElementById("resOut").value,st=document.getElementById("resStatus").value,err="";if(guest==""||phone==""||room==""||ci==""||co=="")err="Complete all reservation fields.";else if(co<=ci)err="Check-out must be after check-in.";document.getElementById("resError").innerHTML=err;if(err!="")return;if(editReservationIndex==-1)adminReservations.push({id:adminReservations.length+1,guest:guest,phone:phone,room:room,checkIn:ci,checkOut:co,status:st});else{let x=adminReservations[editReservationIndex];x.guest=guest;x.phone=phone;x.room=room;x.checkIn=ci;x.checkOut=co;x.status=st;}clearReservationForm();showReservations();showFrontDesk();showAdminDashboard();}
+function editReservationRecord(i){editReservationIndex=i;let x=adminReservations[i];document.getElementById("resGuest").value=x.guest;document.getElementById("resPhone").value=x.phone;document.getElementById("resRoom").value=x.room;document.getElementById("resIn").value=x.checkIn;document.getElementById("resOut").value=x.checkOut;document.getElementById("resStatus").value=x.status;document.getElementById("resFormTitle").innerHTML="Edit Reservation #"+x.id;}
+function deleteReservation(i){if(confirm("Delete this reservation?")){removeAdminItem(adminReservations,i);showReservations();showAdminDashboard();}}
+function clearReservationForm(){editReservationIndex=-1;document.getElementById("resGuest").value="";document.getElementById("resPhone").value="";document.getElementById("resRoom").value="";document.getElementById("resIn").value="";document.getElementById("resOut").value="";document.getElementById("resStatus").value="Reserved";document.getElementById("resError").innerHTML="";document.getElementById("resFormTitle").innerHTML="Add / Edit Reservation";}
+function showFrontDesk(){let ci=0,co=0;let t="<table class='datatable adm-table'><tr><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Front Desk Status</th></tr>";for(let i=0;i<adminReservations.length;i++){let x=adminReservations[i];if(x.status=="Checked-in")ci++;if(x.status=="Checked-out")co++;t+="<tr><td>"+safeAdminText(x.guest)+"</td><td>"+safeAdminText(x.room)+"</td><td>"+x.checkIn+"</td><td>"+x.checkOut+"</td><td>"+safeAdminText(x.status)+"</td></tr>";}document.getElementById("deskSummary").innerHTML="<p>Currently checked-in: <b>"+ci+"</b> &nbsp; Checked-out: <b>"+co+"</b></p>";document.getElementById("deskTable").innerHTML=t+"</table>";}
+function showPayments(){let t="<table class='datatable adm-table'><tr><th>Payment ID</th><th>Booking</th><th>Guest</th><th>Amount</th><th>Method</th><th>Status</th><th>Action</th></tr>";for(let i=0;i<adminPayments.length;i++){let x=adminPayments[i];t+="<tr><td>"+x.id+"</td><td>"+x.booking+"</td><td>"+safeAdminText(x.guest)+"</td><td>$"+x.amount+"</td><td>"+safeAdminText(x.method)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='cyclePayment("+i+")'>Change Status</button> <button class='danger adm-action-btn' onclick='deletePayment("+i+")'>Delete</button></td></tr>";}document.getElementById("paymentTable").innerHTML=t+"</table>";}
+function savePayment(){let b=document.getElementById("payBooking").value,g=document.getElementById("payGuest").value.trim(),a=document.getElementById("payAmount").value,m=document.getElementById("payMethod").value,s=document.getElementById("payStatus").value,err="";if(b==""||g==""||a=="")err="Enter booking ID, guest and amount.";else if(a<=0)err="Amount must be greater than zero.";document.getElementById("payError").innerHTML=err;if(err!="")return;let exists=false;for(let i=0;i<adminPayments.length;i++){if(adminPayments[i].booking==b){adminPayments[i].guest=g;adminPayments[i].amount=a*1;adminPayments[i].method=m;adminPayments[i].status=s;exists=true;}}if(!exists)adminPayments.push({id:adminPayments.length+1,booking:b*1,guest:g,amount:a*1,method:m,status:s});document.getElementById("payBooking").value="";document.getElementById("payGuest").value="";document.getElementById("payAmount").value="";document.getElementById("payError").innerHTML="";showPayments();showAdminDashboard();}
+function cyclePayment(i){if(adminPayments[i].status=="Unpaid")adminPayments[i].status="Paid";else if(adminPayments[i].status=="Paid")adminPayments[i].status="Refunded";else adminPayments[i].status="Unpaid";showPayments();}
+function deletePayment(i){removeAdminItem(adminPayments,i);showPayments();showAdminDashboard();}
+function showFeedback(){let guests="<table class='datatable adm-table'><tr><th>Guest Name</th><th>Email</th><th>Phone</th><th>Status</th></tr>";for(let i=0;i<adminAccounts.length;i++)if(adminAccounts[i].role=="Guest")guests+="<tr><td>"+safeAdminText(adminAccounts[i].first+" "+adminAccounts[i].last)+"</td><td>"+safeAdminText(adminAccounts[i].email)+"</td><td>"+safeAdminText(adminAccounts[i].phone)+"</td><td>"+safeAdminText(adminAccounts[i].status)+"</td></tr>";document.getElementById("guestDirectory").innerHTML=guests+"</table>";let t="<table class='datatable adm-table'><tr><th>Guest</th><th>Feedback</th><th>Status</th><th>Actions</th></tr>";for(let j=0;j<adminFeedback.length;j++){let x=adminFeedback[j];t+="<tr><td>"+safeAdminText(x.guest)+"</td><td>"+safeAdminText(x.text)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='updateFeedback("+j+")'>Next Status</button> <button class='danger adm-action-btn' onclick='deleteFeedback("+j+")'>Delete</button></td></tr>";}document.getElementById("feedbackTable").innerHTML=t+"</table>";}
+function addFeedback(){let g=document.getElementById("fbGuest").value.trim(),t=document.getElementById("fbText").value.trim(),s=document.getElementById("fbStatus").value,err="";if(g==""||t=="")err="Enter guest name and feedback.";document.getElementById("fbError").innerHTML=err;if(err!="")return;adminFeedback.push({id:adminFeedback.length+1,guest:g,text:t,status:s});document.getElementById("fbGuest").value="";document.getElementById("fbText").value="";document.getElementById("fbError").innerHTML="";showFeedback();}
+function updateFeedback(i){if(adminFeedback[i].status=="New")adminFeedback[i].status="Reviewed";else if(adminFeedback[i].status=="Reviewed")adminFeedback[i].status="Resolved";else adminFeedback[i].status="New";showFeedback();}
+function deleteFeedback(i){removeAdminItem(adminFeedback,i);showFeedback();}
