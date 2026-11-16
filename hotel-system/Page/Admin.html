@@ -1,165 +1,447 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal</title>
+    <title>The Grand Palace | Admin Dashboard</title>
     <link rel="stylesheet" href="../Design/Style.css">
     <link rel="stylesheet" href="../Design/Admin.css">
-    <script src="../JS/Admin.js"></script>
+    <script src="../JS/Admin.js" defer></script>
 </head>
-<body onload="refreshAll()">
 
-<div class="topbar">
-    <div class="brand"> Hotel RMS <small>Admin Portal</small></div>
-    <div class="topright"><span>Admin</span><a href="../index.html">Logout</a></div>
-</div>
+<body onload="initAdmin()">
 
-<div class="wrap">
-
-    <div class="sidebar">
-        <h4>Admin Menu</h4>
-        <a href="#" id="menuDashboard" class="active" onclick="return showSection('dashboard')">Dashboard</a>
-        <a href="#" id="menuNew" onclick="return showSection('new')">New Accounts</a>
-        <a href="#" id="menuUsers" onclick="return showSection('users')">Manage Users</a>
-        <a href="#" id="menuRooms" onclick="return showSection('rooms')">Rooms</a>
-        <a href="#" id="menuPayments" onclick="return showSection('payments')">Payments</a>
+    <!-- ===================== TOP BAR ===================== -->
+    <div class="topbar adm-topbar">
+        <div class="brand">The Grand Palace <small>Administration.</small></div>
+        <div class="topright">
+            <span class="adm-user-label">Administrator</span>
+            <a href="../index.html">Logout</a>
+        </div>
     </div>
 
-    <div class="content">
+    <div class="wrap adm-wrap">
 
-        <!-- ================= SECTION 1: DASHBOARD ================= -->
-        <div id="dashboardSection">
-            <div class="crumb">Admin / Overview</div>
-            <h1 class="title">Dashboard</h1>
-            <p class="desc">A quick count of all accounts in the system.</p>
-
-            <div class="card">
-                <h2>Account Summary</h2>
-                <p class="sub">Numbers are calculated from the account list.</p>
-                <div id="summaryBox"></div>
+        <!-- ===================== SIDEBAR ===================== -->
+        <aside class="sidebar adm-sidebar">
+            <h4>ADMIN WORKSPACE</h4>
+            <a href="#" id="admMenuDashboard" class="active" onclick="return showAdminSection('dashboard')">Dashboard</a>
+            <a href="#" id="admMenuAccounts" onclick="return showAdminSection('accounts')">Manage Account</a>
+            <a href="#" id="admMenuRooms" onclick="return showAdminSection('rooms')">Room &amp; Housekeeping Management</a>
+            <a href="#" id="admMenuReservations" onclick="return showAdminSection('reservations')">Reservation Management</a>
+            <a href="#" id="admMenuFrontdesk" onclick="return showAdminSection('frontdesk')">Front Desk &amp; Payment</a>
+            <a href="#" id="admMenuFeedback" onclick="return showAdminSection('feedback')">User &amp; Feedback Management</a>
+            <div class="adm-sidebar-note">
+                THE GRAND PALACE<br>
+                <span>Hotel Management System · Phase 1</span>
             </div>
-        </div>
+        </aside>
 
-        <!-- ================= SECTION 2: NEW ACCOUNTS ================= -->
-        <div id="newSection" style="display:none">
-            <div class="crumb">Admin / Sign Ups</div>
-            <h1 class="title">New Accounts</h1>
-            <p class="desc">Latest sign-ups, newest first. Fields are the same as the sign up form.</p>
+        <main class="content adm-content">
 
-            <div class="card">
-                <h2>New Accounts List</h2>
-                <p class="sub">Sample data for now. With PHP + database in the final term, this list will load the real sign-ups.</p>
-                <div id="newTable"></div>
-            </div>
-        </div>
+            <!-- ===================== DASHBOARD ===================== -->
+            <section id="admDashboardSection">
+                <div class="crumb">ADMINISTRATION / OVERVIEW</div>
+                <h1 class="title">Dashboard Overview</h1>
+                <p class="desc">A central view of the sample hotel records from all role modules.</p>
 
-        <!-- ================= SECTION 3: MANAGE USERS ================= -->
-        <div id="usersSection" style="display:none">
-            <div class="crumb">Admin / Users</div>
-            <h1 class="title">Manage Users</h1>
-            <p class="desc">Search accounts, disable or enable them and delete them. Admin accounts are protected.</p>
+                <div class="adm-welcome card">
+                    <div>
+                        <p class="adm-eyebrow">WELCOME BACK</p>
+                        <h2>Administrator</h2>
+                        <p>Review and manage the demonstration records in one workspace.</p>
+                    </div>
+                    <div class="adm-welcome-mark">GP</div>
+                </div>
 
-            <div class="card">
-                <h2>All Accounts</h2>
-                <p class="sub">Search by name, email or phone, or filter by role and status.</p>
-                <fieldset>
-                    <legend>Search &amp; Filter</legend>
-                    <table class="adm-filter">
-                        <tr>
-                            <td><input type="text" id="SearchUser" onkeyup="showUsers()" placeholder="Search name, email or phone"></td>
-                            <td>
-                                <select id="FilterRole" onchange="showUsers()">
-                                    <option value="All">All roles</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Receptionist">Receptionist</option>
-                                    <option value="Guest">Guest</option>
+                <div class="adm-stat-grid">
+                    <div class="adm-stat-card">
+                        <span class="adm-stat-icon adm-blue">A</span>
+                        <div>
+                            <p>Accounts</p>
+                            <h2 id="dashAccounts">0</h2>
+                        </div>
+                    </div>
+                    <div class="adm-stat-card">
+                        <span class="adm-stat-icon adm-green">R</span>
+                        <div>
+                            <p>Rooms</p>
+                            <h2 id="dashRooms">0</h2>
+                        </div>
+                    </div>
+                    <div class="adm-stat-card">
+                        <span class="adm-stat-icon adm-purple">B</span>
+                        <div>
+                            <p>Reservations</p>
+                            <h2 id="dashReservations">0</h2>
+                        </div>
+                    </div>
+                    <div class="adm-stat-card">
+                        <span class="adm-stat-icon adm-gold">P</span>
+                        <div>
+                            <p>Payments</p>
+                            <h2 id="dashPayments">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="adm-two-column">
+                    <div class="card adm-panel-card">
+                        <div class="adm-card-heading">
+                            <div>
+                                <h2>Room Status</h2>
+                                <p class="sub">Current room sample records</p>
+                            </div>
+                            <a href="#" onclick="return showAdminSection('rooms')">Manage</a>
+                        </div>
+                        <div id="dashRoomSummary"></div>
+                    </div>
+
+                    <div class="card adm-panel-card">
+                        <div class="adm-card-heading">
+                            <div>
+                                <h2>Reservation Status</h2>
+                                <p class="sub">Current reservation sample records</p>
+                            </div>
+                            <a href="#" onclick="return showAdminSection('reservations')">View all</a>
+                        </div>
+                        <div id="dashReservationSummary"></div>
+                    </div>
+                </div>
+
+                <div class="card adm-panel-card">
+                    <div class="adm-card-heading">
+                        <div>
+                            <h2>Recent Activity</h2>
+                            <p class="sub">Sample front-desk activity</p>
+                        </div>
+                        <a href="#" onclick="return showAdminSection('frontdesk')">Front desk</a>
+                    </div>
+                    <div id="dashRecent"></div>
+                </div>
+            </section>
+
+            <!-- ===================== MANAGE ACCOUNT ===================== -->
+            <section id="admAccountsSection" style="display:none">
+                <div class="crumb">ADMINISTRATION / MANAGE ACCOUNT</div>
+                <h1 class="title">Manage Account</h1>
+                <p class="desc">Add, review, enable, disable and remove sample user accounts.</p>
+
+                <div class="card adm-panel-card">
+                    <div class="adm-card-heading">
+                        <div>
+                            <h2>Account Directory</h2>
+                            <p class="sub">Administrator, Manager, Receptionist and Guest accounts</p>
+                        </div>
+                        <button type="button" onclick="openAccountForm()">+ Add Account</button>
+                    </div>
+
+                    <!-- Add / Edit account form -->
+                    <div id="accountForm" class="adm-form-box" style="display:none">
+                        <h3 id="accountFormTitle">Add Account</h3>
+                        <div class="adm-form-grid">
+                            <div>
+                                <label>First Name</label>
+                                <input id="accFirst">
+                            </div>
+                            <div>
+                                <label>Last Name</label>
+                                <input id="accLast">
+                            </div>
+                            <div>
+                                <label>Email</label>
+                                <input id="accEmail" type="email">
+                            </div>
+                            <div>
+                                <label>Phone</label>
+                                <input id="accPhone">
+                            </div>
+                            <div>
+                                <label>Role</label>
+                                <select id="accRole">
+                                    <option>Guest</option>
+                                    <option>Receptionist</option>
+                                    <option>Manager</option>
+                                    <option>Admin</option>
                                 </select>
-                            </td>
-                            <td>
-                                <select id="FilterStatus" onchange="showUsers()">
-                                    <option value="All">All statuses</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Disabled">Disabled</option>
+                            </div>
+                            <div>
+                                <label>Status</label>
+                                <select id="accStatus">
+                                    <option>Active</option>
+                                    <option>Disabled</option>
                                 </select>
-                            </td>
-                        </tr>
-                    </table>
-                </fieldset>
-                <p id="UserMsg" class="ok"></p>
-                <div id="userTable"></div>
-            </div>
-        </div>
+                            </div>
+                        </div>
+                        <p id="accError" class="adm-error"></p>
+                        <button type="button" onclick="saveAccount()">Save Account</button>
+                        <button type="button" class="light" onclick="cancelAccountForm()">Cancel</button>
+                    </div>
 
-        <!-- ================= SECTION 4: ROOMS (view only) ================= -->
-        <div id="roomsSection" style="display:none">
-            <div class="crumb">Admin / Rooms</div>
-            <h1 class="title">Rooms</h1>
-            <p class="desc">Check all hotel rooms and their status. Rooms are added and edited by the Manager.</p>
-
-            <div class="card">
-                <h2>Room Summary</h2>
-                <p class="sub">Numbers are calculated from the room list.</p>
-                <div id="roomSummary"></div>
-            </div>
-
-            <div class="card">
-                <h2>Room List</h2>
-                <p class="sub">Search by room number or filter by status.</p>
-                <table class="adm-filter">
-                    <tr>
-                        <td><input type="text" id="SearchRoom" onkeyup="showRooms()" placeholder="Search room number"></td>
-                        <td>
-                            <select id="FilterRoomStatus" onchange="showRooms()">
-                                <option value="All">All statuses</option>
-                                <option value="Available">Available</option>
-                                <option value="Occupied">Occupied</option>
-                                <option value="Maintenance">Maintenance</option>
+                    <!-- Search and filter -->
+                    <div class="adm-toolbar">
+                        <div class="adm-search">
+                            <label>Search</label>
+                            <input id="accSearch" onkeyup="showAccounts()" placeholder="Name, email or phone">
+                        </div>
+                        <div class="adm-filter">
+                            <label>Role</label>
+                            <select id="accFilter" onchange="showAccounts()">
+                                <option>All</option>
+                                <option>Admin</option>
+                                <option>Manager</option>
+                                <option>Receptionist</option>
+                                <option>Guest</option>
                             </select>
-                        </td>
-                    </tr>
-                </table>
-                <br>
-                <div id="roomTable"></div>
-            </div>
-        </div>
+                        </div>
+                    </div>
 
-        <!-- ================= SECTION 5: PAYMENTS ================= -->
-        <div id="paymentsSection" style="display:none">
-            <div class="crumb">Admin / Finance</div>
-            <h1 class="title">Payments</h1>
-            <p class="desc">Review payment records and update their status.</p>
+                    <div id="accountTable" class="adm-table-wrap"></div>
+                </div>
+            </section>
 
-            <div class="card">
-                <h2>Payment Summary</h2>
-                <p class="sub">Collected money counts only payments marked Paid.</p>
-                <div id="paymentSummary"></div>
-            </div>
+            <!-- ===================== ROOM & HOUSEKEEPING ===================== -->
+            <section id="admRoomsSection" style="display:none">
+                <div class="crumb">ADMINISTRATION / OPERATIONS</div>
+                <h1 class="title">Room &amp; Housekeeping Management</h1>
+                <p class="desc">Manage the room inventory and housekeeping task records copied from the Manager module.</p>
 
-            <div class="card">
-                <h2>Payment List</h2>
-                <p class="sub">Search by transaction, booking or guest, or filter by status.</p>
-                <table class="adm-filter">
-                    <tr>
-                        <td><input type="text" id="SearchPayment" onkeyup="showPayments()" placeholder="Search transaction, booking or guest"></td>
-                        <td>
-                            <select id="FilterPayStatus" onchange="showPayments()">
-                                <option value="All">All statuses</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Refunded">Refunded</option>
+                <!-- Add / Edit room -->
+                <div class="card adm-panel-card">
+                    <div class="adm-card-heading">
+                        <div>
+                            <h2 id="roomFormTitle">Add / Edit Room</h2>
+                            <p class="sub">Room number, type, floor and availability status</p>
+                        </div>
+                    </div>
+                    <div class="adm-form-grid">
+                        <div>
+                            <label>Room Number</label>
+                            <input id="roomNumber">
+                        </div>
+                        <div>
+                            <label>Room Type</label>
+                            <select id="roomType">
+                                <option>Standard</option>
+                                <option>Deluxe</option>
+                                <option>Suite</option>
                             </select>
-                        </td>
-                    </tr>
-                </table>
-                <p id="PaymentMsg" class="ok"></p>
-                <div id="paymentTable"></div>
-            </div>
-        </div>
+                        </div>
+                        <div>
+                            <label>Floor</label>
+                            <input id="roomFloor" type="number" min="1">
+                        </div>
+                        <div>
+                            <label>Status</label>
+                            <select id="roomStatus">
+                                <option>Available</option>
+                                <option>Occupied</option>
+                                <option>Maintenance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="roomError" class="adm-error"></p>
+                    <button type="button" onclick="saveRoom()">Save Room</button>
+                    <button type="button" class="light" onclick="clearRoomForm()">Clear</button>
+                </div>
 
+                <!-- Room inventory -->
+                <div class="card adm-panel-card">
+                    <div class="adm-card-heading">
+                        <div>
+                            <h2>Room Inventory</h2>
+                            <p class="sub">Edit or delete a room record</p>
+                        </div>
+                    </div>
+                    <div id="roomTable" class="adm-table-wrap"></div>
+                </div>
+
+                <!-- Housekeeping tasks -->
+                <div class="card adm-panel-card">
+                    <div class="adm-card-heading">
+                        <div>
+                            <h2 id="taskFormTitle">Housekeeping Tasks</h2>
+                            <p class="sub">Assign and update housekeeping work</p>
+                        </div>
+                    </div>
+                    <div class="adm-form-grid">
+                        <div>
+                            <label>Room</label>
+                            <input id="taskRoom">
+                        </div>
+                        <div>
+                            <label>Task Description</label>
+                            <input id="taskName">
+                        </div>
+                        <div>
+                            <label>Assigned To</label>
+                            <input id="taskWorker">
+                        </div>
+                        <div>
+                            <label>Status</label>
+                            <select id="taskStatus">
+                                <option>Pending</option>
+                                <option>Done</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="taskError" class="adm-error"></p>
+                    <button type="button" onclick="saveTask()">Save Task</button>
+                    <button type="button" class="light" onclick="clearTaskForm()">Clear</button>
+                    <div id="taskTable" class="adm-table-wrap"></div>
+                </div>
+            </section>
+
+            <!-- ===================== RESERVATIONS ===================== -->
+            <section id="admReservationsSection" style="display:none">
+                <div class="crumb">ADMINISTRATION / RESERVATIONS</div>
+                <h1 class="title">Reservation Management</h1>
+                <p class="desc">View and edit sample reservations from the Receptionist module.</p>
+
+                <div class="card adm-panel-card">
+                    <h2 id="resFormTitle">Add / Edit Reservation</h2>
+                    <div class="adm-form-grid">
+                        <div>
+                            <label>Guest Name</label>
+                            <input id="resGuest">
+                        </div>
+                        <div>
+                            <label>Phone</label>
+                            <input id="resPhone">
+                        </div>
+                        <div>
+                            <label>Room Number</label>
+                            <input id="resRoom">
+                        </div>
+                        <div>
+                            <label>Check-in</label>
+                            <input id="resIn" type="date">
+                        </div>
+                        <div>
+                            <label>Check-out</label>
+                            <input id="resOut" type="date">
+                        </div>
+                        <div>
+                            <label>Status</label>
+                            <select id="resStatus">
+                                <option>Reserved</option>
+                                <option>Checked-in</option>
+                                <option>Checked-out</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="resError" class="adm-error"></p>
+                    <button type="button" onclick="saveReservation()">Save Reservation</button>
+                    <button type="button" class="light" onclick="clearReservationForm()">Clear</button>
+                </div>
+
+                <div class="card adm-panel-card">
+                    <div class="adm-card-heading">
+                        <h2>Reservation Directory</h2>
+                    </div>
+                    <div id="reservationTable" class="adm-table-wrap"></div>
+                </div>
+            </section>
+
+            <!-- ===================== FRONT DESK & PAYMENT ===================== -->
+            <section id="admFrontdeskSection" style="display:none">
+                <div class="crumb">ADMINISTRATION / FRONT DESK</div>
+                <h1 class="title">Front Desk &amp; Payment</h1>
+                <p class="desc">Review check-in / check-out activity and edit payment records.</p>
+
+                <!-- Front desk overview -->
+                <div class="card adm-panel-card">
+                    <h2>Front Desk Overview</h2>
+                    <div id="deskSummary"></div>
+                    <div id="deskTable" class="adm-table-wrap"></div>
+                </div>
+
+                <!-- Payment management -->
+                <div class="card adm-panel-card">
+                    <h2>Payment Management</h2>
+                    <div class="adm-form-grid">
+                        <div>
+                            <label>Booking / Reservation ID</label>
+                            <input id="payBooking" type="number">
+                        </div>
+                        <div>
+                            <label>Guest Name</label>
+                            <input id="payGuest">
+                        </div>
+                        <div>
+                            <label>Amount (USD)</label>
+                            <input id="payAmount" type="number" min="1">
+                        </div>
+                        <div>
+                            <label>Method</label>
+                            <select id="payMethod">
+                                <option>Cash</option>
+                                <option>Card</option>
+                                <option>Mobile Banking</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Status</label>
+                            <select id="payStatus">
+                                <option>Unpaid</option>
+                                <option>Paid</option>
+                                <option>Refunded</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="payError" class="adm-error"></p>
+                    <button type="button" onclick="savePayment()">Add / Update Payment</button>
+                    <div id="paymentTable" class="adm-table-wrap"></div>
+                </div>
+            </section>
+
+            <!-- ===================== USER & FEEDBACK ===================== -->
+            <section id="admFeedbackSection" style="display:none">
+                <div class="crumb">ADMINISTRATION / USERS &amp; FEEDBACK</div>
+                <h1 class="title">User &amp; Feedback Management</h1>
+                <p class="desc">Review guest account details and manage sample feedback records.</p>
+
+                <!-- Guest directory -->
+                <div class="card adm-panel-card">
+                    <h2>Guest Directory</h2>
+                    <div id="guestDirectory" class="adm-table-wrap"></div>
+                </div>
+
+                <!-- Guest feedback -->
+                <div class="card adm-panel-card">
+                    <h2>Guest Feedback</h2>
+                    <p class="sub">Sample demonstration feedback. The Guest page currently displays a thank-you message but does not save feedback in an array.</p>
+                    <div class="adm-form-grid">
+                        <div>
+                            <label>Guest Name</label>
+                            <input id="fbGuest">
+                        </div>
+                        <div>
+                            <label>Feedback</label>
+                            <input id="fbText">
+                        </div>
+                        <div>
+                            <label>Status</label>
+                            <select id="fbStatus">
+                                <option>New</option>
+                                <option>Reviewed</option>
+                                <option>Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p id="fbError" class="adm-error"></p>
+                    <button type="button" onclick="addFeedback()">Add Feedback</button>
+                    <div id="feedbackTable" class="adm-table-wrap"></div>
+                </div>
+            </section>
+
+        </main>
     </div>
-</div>
-<div class="footer">© 2026 Hotel Reservation System · Admin Portal</div>
+
+    <div class="footer">© 2026 The Grand Palace  Hotel Reservation &amp; Operation Management System</div>
+
 </body>
+
 </html>
