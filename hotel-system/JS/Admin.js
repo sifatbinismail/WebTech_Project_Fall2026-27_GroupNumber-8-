@@ -350,3 +350,42 @@ function changePayment(id, status) {
     document.getElementById("PaymentMsg").innerHTML = "Payment " + id + " is now " + status + ".";
     refreshAll();
 }
+
+const defaultAccounts = [
+  { id: 1, name: "Arif Rahman", email: "arif@example.com", phone: "01688888888", role: "Receptionist", status: "Active" },
+  // baki gula...
+];
+
+function getAccounts() {
+  const saved = localStorage.getItem("accounts");
+  if (!saved) {
+    localStorage.setItem("accounts", JSON.stringify(defaultAccounts));
+    return [...defaultAccounts];
+  }
+  return JSON.parse(saved);
+}
+
+function saveAccounts(list) {
+  localStorage.setItem("accounts", JSON.stringify(list));
+}
+
+
+
+function deleteAccount(id) {
+  let accounts = getAccounts();
+  accounts = accounts.filter(a => a.id !== id);
+  saveAccounts(accounts);   // eta must
+  renderAccounts();
+}
+
+function toggleStatus(id) {
+  const accounts = getAccounts();
+  const acc = accounts.find(a => a.id === id);
+  acc.status = acc.status === "Active" ? "Disabled" : "Active";
+  saveAccounts(accounts);   // eta must
+  renderAccounts();
+}
+
+
+
+
