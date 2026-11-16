@@ -8,7 +8,7 @@ console.log("Admin.js Connected");
 // the list is oldest first, so the newest account is the LAST item
 let adminAccounts = [
     { id: 1, first: "Admin", last: "User", email: "admin@hotel.com", birthday: "1990-01-15", phone: "01711111111", role: "Admin", registered: "2026-10-01 09:00", status: "Active" },
-    { id: 2, first: "Mona", last: "Manager", email: "manager@hotel.com", birthday: "1992-03-20", phone: "01722222222", role: "Manager", registered: "2026-10-01 09:05", status: "Active" },
+    { id: 2, first: "sifat", last: "Manager", email: "manager@hotel.com", birthday: "1992-03-20", phone: "01722222222", role: "Manager", registered: "2026-10-01 09:05", status: "Active" },
     { id: 3, first: "Rafi", last: "Reception", email: "reception@hotel.com", birthday: "1995-07-08", phone: "01733333333", role: "Receptionist", registered: "2026-10-01 09:10", status: "Active" },
     { id: 4, first: "Guest", last: "User", email: "guest@hotel.com", birthday: "1998-11-30", phone: "01744444444", role: "Guest", registered: "2026-10-01 09:15", status: "Active" },
     { id: 5, first: "Nadia", last: "Akter", email: "nadia@example.com", birthday: "2000-05-12", phone: "01755555555", role: "Guest", registered: "2026-11-08 14:20", status: "Active" },
