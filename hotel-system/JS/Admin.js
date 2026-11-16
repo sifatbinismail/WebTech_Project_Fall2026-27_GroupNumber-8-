@@ -1,75 +1,776 @@
 console.log("Admin.js Connected");
 
+/* ===================== SAMPLE DATA ===================== */
+
 let adminAccounts = [
- {first:"Admin",last:"User",email:"admin@hotel.com",phone:"01711111111",role:"Admin",status:"Active"},
- {first:"Sifat",last:"Manager",email:"manager@hotel.com",phone:"01722222222",role:"Manager",status:"Active"},
- {first:"Meskat",last:"Reception",email:"reception@hotel.com",phone:"01733333333",role:"Receptionist",status:"Active"},
- {first:"Guest",last:"User",email:"guest@hotel.com",phone:"01744444444",role:"Guest",status:"Active"}
+    { first: "Admin", last: "User", email: "admin@hotel.com", phone: "01711111111", role: "Admin", status: "Active" },
+    { first: "Sifat", last: "Manager", email: "manager@hotel.com", phone: "01722222222", role: "Manager", status: "Active" },
+    { first: "Meskat", last: "Reception", email: "reception@hotel.com", phone: "01733333333", role: "Receptionist", status: "Active" },
+    { first: "Guest", last: "User", email: "guest@hotel.com", phone: "01744444444", role: "Guest", status: "Active" }
 ];
+
 let adminRooms = [
- {id:1,number:"101",type:"Standard",floor:1,status:"Available"},
- {id:2,number:"102",type:"Standard",floor:1,status:"Occupied"},
- {id:3,number:"201",type:"Deluxe",floor:2,status:"Occupied"},
- {id:4,number:"301",type:"Suite",floor:3,status:"Maintenance"}
+    { id: 1, number: "101", type: "Standard", floor: 1, status: "Available" },
+    { id: 2, number: "102", type: "Standard", floor: 1, status: "Occupied" },
+    { id: 3, number: "201", type: "Deluxe", floor: 2, status: "Occupied" },
+    { id: 4, number: "301", type: "Suite", floor: 3, status: "Maintenance" }
 ];
+
 let adminTasks = [
- {id:1,room:"301",task:"Fix air conditioner",assignedTo:"Karim",status:"Pending"},
- {id:2,room:"101",task:"Clean bathroom",assignedTo:"Rina",status:"Done"}
+    { id: 1, room: "301", task: "Fix air conditioner", assignedTo: "Karim", status: "Pending" },
+    { id: 2, room: "101", task: "Clean bathroom", assignedTo: "Rina", status: "Done" }
 ];
-function adminDate(offset){let d=new Date();d.setDate(d.getDate()+offset);let m=d.getMonth()+1;let day=d.getDate();if(m<10)m="0"+m;if(day<10)day="0"+day;return d.getFullYear()+"-"+m+"-"+day;}
+
+function adminDate(offset) {
+    let d = new Date();
+    d.setDate(d.getDate() + offset);
+    let m = d.getMonth() + 1;
+    let day = d.getDate();
+    if (m < 10) m = "0" + m;
+    if (day < 10) day = "0" + day;
+    return d.getFullYear() + "-" + m + "-" + day;
+}
+
 let adminReservations = [
- {id:1,guest:"Tania Akter",phone:"01855555555",room:"102",checkIn:adminDate(-1),checkOut:adminDate(2),status:"Checked-in"},
- {id:2,guest:"Sabbir Hossain",phone:"01966666666",room:"201",checkIn:adminDate(-2),checkOut:adminDate(1),status:"Checked-in"},
- {id:3,guest:"Nadia Islam",phone:"01577777777",room:"101",checkIn:adminDate(0),checkOut:adminDate(3),status:"Reserved"},
- {id:4,guest:"Karim Uddin",phone:"01712345678",room:"101",checkIn:adminDate(-5),checkOut:adminDate(-3),status:"Checked-out"}
+    { id: 1, guest: "Tania Akter", phone: "01855555555", room: "102", checkIn: adminDate(-1), checkOut: adminDate(2), status: "Checked-in" },
+    { id: 2, guest: "Sabbir Hossain", phone: "01966666666", room: "201", checkIn: adminDate(-2), checkOut: adminDate(1), status: "Checked-in" },
+    { id: 3, guest: "Nadia Islam", phone: "01577777777", room: "101", checkIn: adminDate(0), checkOut: adminDate(3), status: "Reserved" },
+    { id: 4, guest: "Karim Uddin", phone: "01712345678", room: "101", checkIn: adminDate(-5), checkOut: adminDate(-3), status: "Checked-out" }
 ];
+
 let adminPayments = [
- {id:1,booking:1,guest:"Tania Akter",amount:150,method:"Cash",status:"Paid"},
- {id:2,booking:2,guest:"Sabbir Hossain",amount:270,method:"Card",status:"Unpaid"},
- {id:3,booking:3,guest:"Nadia Islam",amount:150,method:"Mobile Banking",status:"Unpaid"}
+    { id: 1, booking: 1, guest: "Tania Akter", amount: 150, method: "Cash", status: "Paid" },
+    { id: 2, booking: 2, guest: "Sabbir Hossain", amount: 270, method: "Card", status: "Unpaid" },
+    { id: 3, booking: 3, guest: "Nadia Islam", amount: 150, method: "Mobile Banking", status: "Unpaid" }
 ];
+
 let adminFeedback = [
- {id:1,guest:"Tania Akter",text:"The room was clean and comfortable.",status:"New"},
- {id:2,guest:"Sabbir Hossain",text:"The front desk service was helpful.",status:"Reviewed"}
+    { id: 1, guest: "Tania Akter", text: "The room was clean and comfortable.", status: "New" },
+    { id: 2, guest: "Sabbir Hossain", text: "The front desk service was helpful.", status: "Reviewed" }
 ];
-let editAccount=-1,editRoom=-1,editTask=-1,editReservationIndex=-1;
-function initAdmin(){showAdminDashboard();showAccounts();showRooms();showTasks();showReservations();showFrontDesk();showPayments();showFeedback();}
-function showAdminSection(name){let names=["dashboard","accounts","rooms","reservations","frontdesk","feedback"];let ids=["admDashboardSection","admAccountsSection","admRoomsSection","admReservationsSection","admFrontdeskSection","admFeedbackSection"];let menus=["admMenuDashboard","admMenuAccounts","admMenuRooms","admMenuReservations","admMenuFrontdesk","admMenuFeedback"];for(let i=0;i<ids.length;i++){document.getElementById(ids[i]).style.display="none";document.getElementById(menus[i]).className="";}let index=names.indexOf(name);if(index<0)index=0;document.getElementById(ids[index]).style.display="block";document.getElementById(menus[index]).className="active";return false;}
-function safeAdminText(value){let s="";value=String(value);for(let i=0;i<value.length;i++){if(value[i]=="&")s+="&amp;";else if(value[i]=="<")s+="&lt;";else if(value[i]==">")s+="&gt;";else if(value[i]=="\"")s+="&quot;";else if(value[i]=="'")s+="&#039;";else s+=value[i];}return s;}
-function removeAdminItem(list,index){for(let i=index;i<list.length-1;i++){list[i]=list[i+1];}list.length=list.length-1;}
-function showAdminDashboard(){document.getElementById("dashAccounts").innerHTML=adminAccounts.length;document.getElementById("dashRooms").innerHTML=adminRooms.length;document.getElementById("dashReservations").innerHTML=adminReservations.length;document.getElementById("dashPayments").innerHTML=adminPayments.length;let a=0,o=0,m=0;for(let i=0;i<adminRooms.length;i++){if(adminRooms[i].status=="Available")a++;else if(adminRooms[i].status=="Occupied")o++;else m++;}document.getElementById("dashRoomSummary").innerHTML="<p>Available: <b>"+a+"</b></p><p>Occupied: <b>"+o+"</b></p><p>Maintenance: <b>"+m+"</b></p>";let r="";for(let i=0;i<adminReservations.length;i++){r+="<p>"+safeAdminText(adminReservations[i].status)+": <b>"+safeAdminText(adminReservations[i].guest)+"</b></p>";}document.getElementById("dashReservationSummary").innerHTML=r;let recent="<table class='datatable adm-table'><tr><th>Guest</th><th>Room</th><th>Activity</th></tr>";for(let i=0;i<adminReservations.length;i++){recent+="<tr><td>"+safeAdminText(adminReservations[i].guest)+"</td><td>"+safeAdminText(adminReservations[i].room)+"</td><td>"+safeAdminText(adminReservations[i].status)+"</td></tr>";}document.getElementById("dashRecent").innerHTML=recent+"</table>";}
 
-function openAccountForm(){editAccount=-1;document.getElementById("accountForm").style.display="block";document.getElementById("accountFormTitle").innerHTML="Add Account";clearAccountInputs();}
-function clearAccountInputs(){document.getElementById("accFirst").value="";document.getElementById("accLast").value="";document.getElementById("accEmail").value="";document.getElementById("accPhone").value="";document.getElementById("accRole").value="Guest";document.getElementById("accStatus").value="Active";document.getElementById("accError").innerHTML="";}
-function cancelAccountForm(){document.getElementById("accountForm").style.display="none";clearAccountInputs();editAccount=-1;}
-function saveAccount(){let f=document.getElementById("accFirst").value.trim(),l=document.getElementById("accLast").value.trim(),e=document.getElementById("accEmail").value.trim(),p=document.getElementById("accPhone").value.trim(),role=document.getElementById("accRole").value,st=document.getElementById("accStatus").value,err="";if(f==""||l==""||e==""||p=="")err="Please complete all fields.";else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))err="Enter a valid email.";else if(!/^01[3-9][0-9]{8}$/.test(p))err="Enter a valid 11-digit Bangladesh phone number.";for(let i=0;i<adminAccounts.length;i++){if(adminAccounts[i].email==e&&i!=editAccount)err="This email already exists.";}document.getElementById("accError").innerHTML=err;if(err!="")return;if(editAccount==-1)adminAccounts.push({first:f,last:l,email:e,phone:p,role:role,status:st});else{adminAccounts[editAccount].first=f;adminAccounts[editAccount].last=l;adminAccounts[editAccount].email=e;adminAccounts[editAccount].phone=p;adminAccounts[editAccount].role=role;adminAccounts[editAccount].status=st;}cancelAccountForm();showAccounts();showAdminDashboard();}
-function showAccounts(){let q=document.getElementById("accSearch").value.trim(),filter=document.getElementById("accFilter").value,t="<table class='datatable adm-table'><tr><th>Name / Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Actions</th></tr>",n=0;for(let i=0;i<adminAccounts.length;i++){let x=adminAccounts[i],hay=(x.first+" "+x.last+" "+x.email+" "+x.phone);if((filter=="All"||filter==x.role)&&hay.indexOf(q)!=-1){n++;t+="<tr><td><b>"+safeAdminText(x.first+" "+x.last)+"</b><br><small>"+safeAdminText(x.email)+"</small></td><td>"+safeAdminText(x.phone)+"</td><td>"+safeAdminText(x.role)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editAccountRecord("+i+")'>Edit</button> <button class='light adm-action-btn' onclick='toggleAccount("+i+")'>"+(x.status=="Active"?"Disable":"Enable")+"</button> <button class='danger adm-action-btn' onclick='deleteAccount("+i+")'>Delete</button></td></tr>";}}if(n==0)t+="<tr><td colspan='5'>No account records.</td></tr>";document.getElementById("accountTable").innerHTML=t+"</table>";}
-function editAccountRecord(i){editAccount=i;let x=adminAccounts[i];document.getElementById("accountForm").style.display="block";document.getElementById("accountFormTitle").innerHTML="Edit Account";document.getElementById("accFirst").value=x.first;document.getElementById("accLast").value=x.last;document.getElementById("accEmail").value=x.email;document.getElementById("accPhone").value=x.phone;document.getElementById("accRole").value=x.role;document.getElementById("accStatus").value=x.status;}
-function toggleAccount(i){if(adminAccounts[i].status=="Active")adminAccounts[i].status="Disabled";else adminAccounts[i].status="Active";showAccounts();}
-function deleteAccount(i){if(adminAccounts[i].role=="Admin"){alert("Admin account cannot be deleted in this demo.");return;}if(confirm("Delete this sample account?")){removeAdminItem(adminAccounts,i);showAccounts();showAdminDashboard();}}
+let editAccount = -1,
+    editRoom = -1,
+    editTask = -1,
+    editReservationIndex = -1;
 
-function showRooms(){let t="<table class='datatable adm-table'><tr><th>Room</th><th>Type</th><th>Floor</th><th>Status</th><th>Actions</th></tr>";for(let i=0;i<adminRooms.length;i++){let x=adminRooms[i];t+="<tr><td>"+safeAdminText(x.number)+"</td><td>"+safeAdminText(x.type)+"</td><td>"+x.floor+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editRoomRecord("+i+")'>Edit</button> <button class='danger adm-action-btn' onclick='deleteRoom("+i+")'>Delete</button></td></tr>";}document.getElementById("roomTable").innerHTML=t+"</table>";}
-function saveRoom(){let no=document.getElementById("roomNumber").value.trim(),type=document.getElementById("roomType").value,floor=document.getElementById("roomFloor").value,st=document.getElementById("roomStatus").value,err="";if(no==""||floor=="")err="Enter room number and floor.";else if(floor<1||floor>20||floor!=Math.floor(floor))err="Floor must be a whole number from 1 to 20.";for(let i=0;i<adminRooms.length;i++)if(adminRooms[i].number==no&&i!=editRoom)err="Room number already exists.";document.getElementById("roomError").innerHTML=err;if(err!="")return;if(editRoom==-1)adminRooms.push({id:adminRooms.length+1,number:no,type:type,floor:floor*1,status:st});else{adminRooms[editRoom].number=no;adminRooms[editRoom].type=type;adminRooms[editRoom].floor=floor*1;adminRooms[editRoom].status=st;}clearRoomForm();showRooms();showAdminDashboard();}
-function editRoomRecord(i){editRoom=i;let x=adminRooms[i];document.getElementById("roomNumber").value=x.number;document.getElementById("roomType").value=x.type;document.getElementById("roomFloor").value=x.floor;document.getElementById("roomStatus").value=x.status;document.getElementById("roomFormTitle").innerHTML="Edit Room";}
-function deleteRoom(i){if(confirm("Delete room "+adminRooms[i].number+"?")){removeAdminItem(adminRooms,i);clearRoomForm();showRooms();showAdminDashboard();}}
-function clearRoomForm(){editRoom=-1;document.getElementById("roomNumber").value="";document.getElementById("roomFloor").value="";document.getElementById("roomError").innerHTML="";document.getElementById("roomFormTitle").innerHTML="Add / Edit Room";}
-function showTasks(){let t="<table class='datatable adm-table'><tr><th>Room</th><th>Task</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr>";for(let i=0;i<adminTasks.length;i++){let x=adminTasks[i];t+="<tr><td>"+safeAdminText(x.room)+"</td><td>"+safeAdminText(x.task)+"</td><td>"+safeAdminText(x.assignedTo)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editTaskRecord("+i+")'>Edit</button> <button class='danger adm-action-btn' onclick='deleteTask("+i+")'>Delete</button></td></tr>";}document.getElementById("taskTable").innerHTML=t+"</table>";}
-function saveTask(){let room=document.getElementById("taskRoom").value.trim(),task=document.getElementById("taskName").value.trim(),worker=document.getElementById("taskWorker").value.trim(),st=document.getElementById("taskStatus").value,err="";if(room==""||task==""||worker=="")err="Complete all housekeeping task fields.";document.getElementById("taskError").innerHTML=err;if(err!="")return;if(editTask==-1)adminTasks.push({id:adminTasks.length+1,room:room,task:task,assignedTo:worker,status:st});else{adminTasks[editTask].room=room;adminTasks[editTask].task=task;adminTasks[editTask].assignedTo=worker;adminTasks[editTask].status=st;}clearTaskForm();showTasks();}
-function editTaskRecord(i){editTask=i;let x=adminTasks[i];document.getElementById("taskRoom").value=x.room;document.getElementById("taskName").value=x.task;document.getElementById("taskWorker").value=x.assignedTo;document.getElementById("taskStatus").value=x.status;}
-function deleteTask(i){removeAdminItem(adminTasks,i);showTasks();}
-function clearTaskForm(){editTask=-1;document.getElementById("taskRoom").value="";document.getElementById("taskName").value="";document.getElementById("taskWorker").value="";document.getElementById("taskStatus").value="Pending";document.getElementById("taskError").innerHTML="";}
+/* ===================== INITIAL LOAD ===================== */
 
-function showReservations(){let t="<table class='datatable adm-table'><tr><th>ID</th><th>Guest / Phone</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Actions</th></tr>";for(let i=0;i<adminReservations.length;i++){let x=adminReservations[i];t+="<tr><td>"+x.id+"</td><td>"+safeAdminText(x.guest)+"<br>"+safeAdminText(x.phone)+"</td><td>"+safeAdminText(x.room)+"</td><td>"+x.checkIn+"</td><td>"+x.checkOut+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='editReservationRecord("+i+")'>Edit</button> <button class='danger adm-action-btn' onclick='deleteReservation("+i+")'>Delete</button></td></tr>";}document.getElementById("reservationTable").innerHTML=t+"</table>";}
-function saveReservation(){let guest=document.getElementById("resGuest").value.trim(),phone=document.getElementById("resPhone").value.trim(),room=document.getElementById("resRoom").value.trim(),ci=document.getElementById("resIn").value,co=document.getElementById("resOut").value,st=document.getElementById("resStatus").value,err="";if(guest==""||phone==""||room==""||ci==""||co=="")err="Complete all reservation fields.";else if(co<=ci)err="Check-out must be after check-in.";document.getElementById("resError").innerHTML=err;if(err!="")return;if(editReservationIndex==-1)adminReservations.push({id:adminReservations.length+1,guest:guest,phone:phone,room:room,checkIn:ci,checkOut:co,status:st});else{let x=adminReservations[editReservationIndex];x.guest=guest;x.phone=phone;x.room=room;x.checkIn=ci;x.checkOut=co;x.status=st;}clearReservationForm();showReservations();showFrontDesk();showAdminDashboard();}
-function editReservationRecord(i){editReservationIndex=i;let x=adminReservations[i];document.getElementById("resGuest").value=x.guest;document.getElementById("resPhone").value=x.phone;document.getElementById("resRoom").value=x.room;document.getElementById("resIn").value=x.checkIn;document.getElementById("resOut").value=x.checkOut;document.getElementById("resStatus").value=x.status;document.getElementById("resFormTitle").innerHTML="Edit Reservation #"+x.id;}
-function deleteReservation(i){if(confirm("Delete this reservation?")){removeAdminItem(adminReservations,i);showReservations();showAdminDashboard();}}
-function clearReservationForm(){editReservationIndex=-1;document.getElementById("resGuest").value="";document.getElementById("resPhone").value="";document.getElementById("resRoom").value="";document.getElementById("resIn").value="";document.getElementById("resOut").value="";document.getElementById("resStatus").value="Reserved";document.getElementById("resError").innerHTML="";document.getElementById("resFormTitle").innerHTML="Add / Edit Reservation";}
-function showFrontDesk(){let ci=0,co=0;let t="<table class='datatable adm-table'><tr><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Front Desk Status</th></tr>";for(let i=0;i<adminReservations.length;i++){let x=adminReservations[i];if(x.status=="Checked-in")ci++;if(x.status=="Checked-out")co++;t+="<tr><td>"+safeAdminText(x.guest)+"</td><td>"+safeAdminText(x.room)+"</td><td>"+x.checkIn+"</td><td>"+x.checkOut+"</td><td>"+safeAdminText(x.status)+"</td></tr>";}document.getElementById("deskSummary").innerHTML="<p>Currently checked-in: <b>"+ci+"</b> &nbsp; Checked-out: <b>"+co+"</b></p>";document.getElementById("deskTable").innerHTML=t+"</table>";}
-function showPayments(){let t="<table class='datatable adm-table'><tr><th>Payment ID</th><th>Booking</th><th>Guest</th><th>Amount</th><th>Method</th><th>Status</th><th>Action</th></tr>";for(let i=0;i<adminPayments.length;i++){let x=adminPayments[i];t+="<tr><td>"+x.id+"</td><td>"+x.booking+"</td><td>"+safeAdminText(x.guest)+"</td><td>$"+x.amount+"</td><td>"+safeAdminText(x.method)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='cyclePayment("+i+")'>Change Status</button> <button class='danger adm-action-btn' onclick='deletePayment("+i+")'>Delete</button></td></tr>";}document.getElementById("paymentTable").innerHTML=t+"</table>";}
-function savePayment(){let b=document.getElementById("payBooking").value,g=document.getElementById("payGuest").value.trim(),a=document.getElementById("payAmount").value,m=document.getElementById("payMethod").value,s=document.getElementById("payStatus").value,err="";if(b==""||g==""||a=="")err="Enter booking ID, guest and amount.";else if(a<=0)err="Amount must be greater than zero.";document.getElementById("payError").innerHTML=err;if(err!="")return;let exists=false;for(let i=0;i<adminPayments.length;i++){if(adminPayments[i].booking==b){adminPayments[i].guest=g;adminPayments[i].amount=a*1;adminPayments[i].method=m;adminPayments[i].status=s;exists=true;}}if(!exists)adminPayments.push({id:adminPayments.length+1,booking:b*1,guest:g,amount:a*1,method:m,status:s});document.getElementById("payBooking").value="";document.getElementById("payGuest").value="";document.getElementById("payAmount").value="";document.getElementById("payError").innerHTML="";showPayments();showAdminDashboard();}
-function cyclePayment(i){if(adminPayments[i].status=="Unpaid")adminPayments[i].status="Paid";else if(adminPayments[i].status=="Paid")adminPayments[i].status="Refunded";else adminPayments[i].status="Unpaid";showPayments();}
-function deletePayment(i){removeAdminItem(adminPayments,i);showPayments();showAdminDashboard();}
-function showFeedback(){let guests="<table class='datatable adm-table'><tr><th>Guest Name</th><th>Email</th><th>Phone</th><th>Status</th></tr>";for(let i=0;i<adminAccounts.length;i++)if(adminAccounts[i].role=="Guest")guests+="<tr><td>"+safeAdminText(adminAccounts[i].first+" "+adminAccounts[i].last)+"</td><td>"+safeAdminText(adminAccounts[i].email)+"</td><td>"+safeAdminText(adminAccounts[i].phone)+"</td><td>"+safeAdminText(adminAccounts[i].status)+"</td></tr>";document.getElementById("guestDirectory").innerHTML=guests+"</table>";let t="<table class='datatable adm-table'><tr><th>Guest</th><th>Feedback</th><th>Status</th><th>Actions</th></tr>";for(let j=0;j<adminFeedback.length;j++){let x=adminFeedback[j];t+="<tr><td>"+safeAdminText(x.guest)+"</td><td>"+safeAdminText(x.text)+"</td><td>"+safeAdminText(x.status)+"</td><td><button class='light adm-action-btn' onclick='updateFeedback("+j+")'>Next Status</button> <button class='danger adm-action-btn' onclick='deleteFeedback("+j+")'>Delete</button></td></tr>";}document.getElementById("feedbackTable").innerHTML=t+"</table>";}
-function addFeedback(){let g=document.getElementById("fbGuest").value.trim(),t=document.getElementById("fbText").value.trim(),s=document.getElementById("fbStatus").value,err="";if(g==""||t=="")err="Enter guest name and feedback.";document.getElementById("fbError").innerHTML=err;if(err!="")return;adminFeedback.push({id:adminFeedback.length+1,guest:g,text:t,status:s});document.getElementById("fbGuest").value="";document.getElementById("fbText").value="";document.getElementById("fbError").innerHTML="";showFeedback();}
-function updateFeedback(i){if(adminFeedback[i].status=="New")adminFeedback[i].status="Reviewed";else if(adminFeedback[i].status=="Reviewed")adminFeedback[i].status="Resolved";else adminFeedback[i].status="New";showFeedback();}
-function deleteFeedback(i){removeAdminItem(adminFeedback,i);showFeedback();}
+function initAdmin() {
+    showAdminDashboard();
+    showAccounts();
+    showRooms();
+    showTasks();
+    showReservations();
+    showFrontDesk();
+    showPayments();
+    showFeedback();
+}
+
+/* ===================== SECTION SWITCHING ===================== */
+
+function showAdminSection(name) {
+    let names = ["dashboard", "accounts", "rooms", "reservations", "frontdesk", "feedback"];
+    let ids = [
+        "admDashboardSection",
+        "admAccountsSection",
+        "admRoomsSection",
+        "admReservationsSection",
+        "admFrontdeskSection",
+        "admFeedbackSection"
+    ];
+    let menus = [
+        "admMenuDashboard",
+        "admMenuAccounts",
+        "admMenuRooms",
+        "admMenuReservations",
+        "admMenuFrontdesk",
+        "admMenuFeedback"
+    ];
+
+    // hide all sections and remove active class from all menu items
+    for (let i = 0; i < ids.length; i++) {
+        document.getElementById(ids[i]).style.display = "none";
+        document.getElementById(menus[i]).className = "";
+    }
+
+    // show the selected section
+    let index = names.indexOf(name);
+    if (index < 0) index = 0;
+
+    document.getElementById(ids[index]).style.display = "block";
+    document.getElementById(menus[index]).className = "active";
+
+    return false;
+}
+
+/* ===================== HELPER FUNCTIONS ===================== */
+
+// Escapes special HTML characters so user text cannot break the page
+function safeAdminText(value) {
+    let s = "";
+    value = String(value);
+
+    for (let i = 0; i < value.length; i++) {
+        if (value[i] == "&") s += "&amp;";
+        else if (value[i] == "<") s += "&lt;";
+        else if (value[i] == ">") s += "&gt;";
+        else if (value[i] == "\"") s += "&quot;";
+        else if (value[i] == "'") s += "&#039;";
+        else s += value[i];
+    }
+
+    return s;
+}
+
+// Removes the item at "index" by shifting the rest of the array left
+function removeAdminItem(list, index) {
+    for (let i = index; i < list.length - 1; i++) {
+        list[i] = list[i + 1];
+    }
+    list.length = list.length - 1;
+}
+
+/* ===================== DASHBOARD ===================== */
+
+function showAdminDashboard() {
+    // summary counts
+    document.getElementById("dashAccounts").innerHTML = adminAccounts.length;
+    document.getElementById("dashRooms").innerHTML = adminRooms.length;
+    document.getElementById("dashReservations").innerHTML = adminReservations.length;
+    document.getElementById("dashPayments").innerHTML = adminPayments.length;
+
+    // room status summary
+    let a = 0,
+        o = 0,
+        m = 0;
+
+    for (let i = 0; i < adminRooms.length; i++) {
+        if (adminRooms[i].status == "Available") a++;
+        else if (adminRooms[i].status == "Occupied") o++;
+        else m++;
+    }
+
+    document.getElementById("dashRoomSummary").innerHTML =
+        "<p>Available: <b>" + a + "</b></p>" +
+        "<p>Occupied: <b>" + o + "</b></p>" +
+        "<p>Maintenance: <b>" + m + "</b></p>";
+
+    // reservation status summary
+    let r = "";
+    for (let i = 0; i < adminReservations.length; i++) {
+        r += "<p>" + safeAdminText(adminReservations[i].status) +
+            ": <b>" + safeAdminText(adminReservations[i].guest) + "</b></p>";
+    }
+    document.getElementById("dashReservationSummary").innerHTML = r;
+
+    // recent activity table
+    let recent = "<table class='datatable adm-table'>" +
+        "<tr><th>Guest</th><th>Room</th><th>Activity</th></tr>";
+
+    for (let i = 0; i < adminReservations.length; i++) {
+        recent += "<tr>" +
+            "<td>" + safeAdminText(adminReservations[i].guest) + "</td>" +
+            "<td>" + safeAdminText(adminReservations[i].room) + "</td>" +
+            "<td>" + safeAdminText(adminReservations[i].status) + "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("dashRecent").innerHTML = recent + "</table>";
+}
+
+/* ===================== MANAGE ACCOUNTS ===================== */
+
+function openAccountForm() {
+    editAccount = -1;
+    document.getElementById("accountForm").style.display = "block";
+    document.getElementById("accountFormTitle").innerHTML = "Add Account";
+    clearAccountInputs();
+}
+
+function clearAccountInputs() {
+    document.getElementById("accFirst").value = "";
+    document.getElementById("accLast").value = "";
+    document.getElementById("accEmail").value = "";
+    document.getElementById("accPhone").value = "";
+    document.getElementById("accRole").value = "Guest";
+    document.getElementById("accStatus").value = "Active";
+    document.getElementById("accError").innerHTML = "";
+}
+
+function cancelAccountForm() {
+    document.getElementById("accountForm").style.display = "none";
+    clearAccountInputs();
+    editAccount = -1;
+}
+
+function saveAccount() {
+    let f = document.getElementById("accFirst").value.trim(),
+        l = document.getElementById("accLast").value.trim(),
+        e = document.getElementById("accEmail").value.trim(),
+        p = document.getElementById("accPhone").value.trim(),
+        role = document.getElementById("accRole").value,
+        st = document.getElementById("accStatus").value,
+        err = "";
+
+    // validation
+    if (f == "" || l == "" || e == "" || p == "")
+        err = "Please complete all fields.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))
+        err = "Enter a valid email.";
+    else if (!/^01[3-9][0-9]{8}$/.test(p))
+        err = "Enter a valid 11-digit Bangladesh phone number.";
+
+    // duplicate email check
+    for (let i = 0; i < adminAccounts.length; i++) {
+        if (adminAccounts[i].email == e && i != editAccount)
+            err = "This email already exists.";
+    }
+
+    document.getElementById("accError").innerHTML = err;
+    if (err != "") return;
+
+    // add new or update existing
+    if (editAccount == -1) {
+        adminAccounts.push({ first: f, last: l, email: e, phone: p, role: role, status: st });
+    } else {
+        adminAccounts[editAccount].first = f;
+        adminAccounts[editAccount].last = l;
+        adminAccounts[editAccount].email = e;
+        adminAccounts[editAccount].phone = p;
+        adminAccounts[editAccount].role = role;
+        adminAccounts[editAccount].status = st;
+    }
+
+    cancelAccountForm();
+    showAccounts();
+    showAdminDashboard();
+}
+
+function showAccounts() {
+    let q = document.getElementById("accSearch").value.trim(),
+        filter = document.getElementById("accFilter").value,
+        t = "<table class='datatable adm-table'>" +
+            "<tr><th>Name / Email</th><th>Phone</th><th>Role</th><th>Status</th><th>Actions</th></tr>",
+        n = 0;
+
+    for (let i = 0; i < adminAccounts.length; i++) {
+        let x = adminAccounts[i],
+            hay = (x.first + " " + x.last + " " + x.email + " " + x.phone);
+
+        // apply role filter and search text
+        if ((filter == "All" || filter == x.role) && hay.indexOf(q) != -1) {
+            n++;
+            t += "<tr>" +
+                "<td><b>" + safeAdminText(x.first + " " + x.last) + "</b><br>" +
+                "<small>" + safeAdminText(x.email) + "</small></td>" +
+                "<td>" + safeAdminText(x.phone) + "</td>" +
+                "<td>" + safeAdminText(x.role) + "</td>" +
+                "<td>" + safeAdminText(x.status) + "</td>" +
+                "<td>" +
+                "<button class='light adm-action-btn' onclick='editAccountRecord(" + i + ")'>Edit</button> " +
+                "<button class='light adm-action-btn' onclick='toggleAccount(" + i + ")'>" +
+                (x.status == "Active" ? "Disable" : "Enable") + "</button> " +
+                "<button class='danger adm-action-btn' onclick='deleteAccount(" + i + ")'>Delete</button>" +
+                "</td>" +
+                "</tr>";
+        }
+    }
+
+    if (n == 0) t += "<tr><td colspan='5'>No account records.</td></tr>";
+
+    document.getElementById("accountTable").innerHTML = t + "</table>";
+}
+
+function editAccountRecord(i) {
+    editAccount = i;
+    let x = adminAccounts[i];
+
+    document.getElementById("accountForm").style.display = "block";
+    document.getElementById("accountFormTitle").innerHTML = "Edit Account";
+    document.getElementById("accFirst").value = x.first;
+    document.getElementById("accLast").value = x.last;
+    document.getElementById("accEmail").value = x.email;
+    document.getElementById("accPhone").value = x.phone;
+    document.getElementById("accRole").value = x.role;
+    document.getElementById("accStatus").value = x.status;
+}
+
+function toggleAccount(i) {
+    if (adminAccounts[i].status == "Active") adminAccounts[i].status = "Disabled";
+    else adminAccounts[i].status = "Active";
+
+    showAccounts();
+}
+
+function deleteAccount(i) {
+    if (adminAccounts[i].role == "Admin") {
+        alert("Admin account cannot be deleted in this demo.");
+        return;
+    }
+
+    if (confirm("Delete this sample account?")) {
+        removeAdminItem(adminAccounts, i);
+        showAccounts();
+        showAdminDashboard();
+    }
+}
+
+/* ===================== ROOMS ===================== */
+
+function showRooms() {
+    let t = "<table class='datatable adm-table'>" +
+        "<tr><th>Room</th><th>Type</th><th>Floor</th><th>Status</th><th>Actions</th></tr>";
+
+    for (let i = 0; i < adminRooms.length; i++) {
+        let x = adminRooms[i];
+        t += "<tr>" +
+            "<td>" + safeAdminText(x.number) + "</td>" +
+            "<td>" + safeAdminText(x.type) + "</td>" +
+            "<td>" + x.floor + "</td>" +
+            "<td>" + safeAdminText(x.status) + "</td>" +
+            "<td>" +
+            "<button class='light adm-action-btn' onclick='editRoomRecord(" + i + ")'>Edit</button> " +
+            "<button class='danger adm-action-btn' onclick='deleteRoom(" + i + ")'>Delete</button>" +
+            "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("roomTable").innerHTML = t + "</table>";
+}
+
+function saveRoom() {
+    let no = document.getElementById("roomNumber").value.trim(),
+        type = document.getElementById("roomType").value,
+        floor = document.getElementById("roomFloor").value,
+        st = document.getElementById("roomStatus").value,
+        err = "";
+
+    // validation
+    if (no == "" || floor == "")
+        err = "Enter room number and floor.";
+    else if (floor < 1 || floor > 20 || floor != Math.floor(floor))
+        err = "Floor must be a whole number from 1 to 20.";
+
+    // duplicate room number check
+    for (let i = 0; i < adminRooms.length; i++) {
+        if (adminRooms[i].number == no && i != editRoom)
+            err = "Room number already exists.";
+    }
+
+    document.getElementById("roomError").innerHTML = err;
+    if (err != "") return;
+
+    // add new or update existing
+    if (editRoom == -1) {
+        adminRooms.push({ id: adminRooms.length + 1, number: no, type: type, floor: floor * 1, status: st });
+    } else {
+        adminRooms[editRoom].number = no;
+        adminRooms[editRoom].type = type;
+        adminRooms[editRoom].floor = floor * 1;
+        adminRooms[editRoom].status = st;
+    }
+
+    clearRoomForm();
+    showRooms();
+    showAdminDashboard();
+}
+
+function editRoomRecord(i) {
+    editRoom = i;
+    let x = adminRooms[i];
+
+    document.getElementById("roomNumber").value = x.number;
+    document.getElementById("roomType").value = x.type;
+    document.getElementById("roomFloor").value = x.floor;
+    document.getElementById("roomStatus").value = x.status;
+    document.getElementById("roomFormTitle").innerHTML = "Edit Room";
+}
+
+function deleteRoom(i) {
+    if (confirm("Delete room " + adminRooms[i].number + "?")) {
+        removeAdminItem(adminRooms, i);
+        clearRoomForm();
+        showRooms();
+        showAdminDashboard();
+    }
+}
+
+function clearRoomForm() {
+    editRoom = -1;
+    document.getElementById("roomNumber").value = "";
+    document.getElementById("roomFloor").value = "";
+    document.getElementById("roomError").innerHTML = "";
+    document.getElementById("roomFormTitle").innerHTML = "Add / Edit Room";
+}
+
+/* ===================== HOUSEKEEPING TASKS ===================== */
+
+function showTasks() {
+    let t = "<table class='datatable adm-table'>" +
+        "<tr><th>Room</th><th>Task</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr>";
+
+    for (let i = 0; i < adminTasks.length; i++) {
+        let x = adminTasks[i];
+        t += "<tr>" +
+            "<td>" + safeAdminText(x.room) + "</td>" +
+            "<td>" + safeAdminText(x.task) + "</td>" +
+            "<td>" + safeAdminText(x.assignedTo) + "</td>" +
+            "<td>" + safeAdminText(x.status) + "</td>" +
+            "<td>" +
+            "<button class='light adm-action-btn' onclick='editTaskRecord(" + i + ")'>Edit</button> " +
+            "<button class='danger adm-action-btn' onclick='deleteTask(" + i + ")'>Delete</button>" +
+            "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("taskTable").innerHTML = t + "</table>";
+}
+
+function saveTask() {
+    let room = document.getElementById("taskRoom").value.trim(),
+        task = document.getElementById("taskName").value.trim(),
+        worker = document.getElementById("taskWorker").value.trim(),
+        st = document.getElementById("taskStatus").value,
+        err = "";
+
+    if (room == "" || task == "" || worker == "")
+        err = "Complete all housekeeping task fields.";
+
+    document.getElementById("taskError").innerHTML = err;
+    if (err != "") return;
+
+    // add new or update existing
+    if (editTask == -1) {
+        adminTasks.push({ id: adminTasks.length + 1, room: room, task: task, assignedTo: worker, status: st });
+    } else {
+        adminTasks[editTask].room = room;
+        adminTasks[editTask].task = task;
+        adminTasks[editTask].assignedTo = worker;
+        adminTasks[editTask].status = st;
+    }
+
+    clearTaskForm();
+    showTasks();
+}
+
+function editTaskRecord(i) {
+    editTask = i;
+    let x = adminTasks[i];
+
+    document.getElementById("taskRoom").value = x.room;
+    document.getElementById("taskName").value = x.task;
+    document.getElementById("taskWorker").value = x.assignedTo;
+    document.getElementById("taskStatus").value = x.status;
+}
+
+function deleteTask(i) {
+    removeAdminItem(adminTasks, i);
+    showTasks();
+}
+
+function clearTaskForm() {
+    editTask = -1;
+    document.getElementById("taskRoom").value = "";
+    document.getElementById("taskName").value = "";
+    document.getElementById("taskWorker").value = "";
+    document.getElementById("taskStatus").value = "Pending";
+    document.getElementById("taskError").innerHTML = "";
+}
+
+/* ===================== RESERVATIONS ===================== */
+
+function showReservations() {
+    let t = "<table class='datatable adm-table'>" +
+        "<tr><th>ID</th><th>Guest / Phone</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Actions</th></tr>";
+
+    for (let i = 0; i < adminReservations.length; i++) {
+        let x = adminReservations[i];
+        t += "<tr>" +
+            "<td>" + x.id + "</td>" +
+            "<td>" + safeAdminText(x.guest) + "<br>" + safeAdminText(x.phone) + "</td>" +
+            "<td>" + safeAdminText(x.room) + "</td>" +
+            "<td>" + x.checkIn + "</td>" +
+            "<td>" + x.checkOut + "</td>" +
+            "<td>" + safeAdminText(x.status) + "</td>" +
+            "<td>" +
+            "<button class='light adm-action-btn' onclick='editReservationRecord(" + i + ")'>Edit</button> " +
+            "<button class='danger adm-action-btn' onclick='deleteReservation(" + i + ")'>Delete</button>" +
+            "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("reservationTable").innerHTML = t + "</table>";
+}
+
+function saveReservation() {
+    let guest = document.getElementById("resGuest").value.trim(),
+        phone = document.getElementById("resPhone").value.trim(),
+        room = document.getElementById("resRoom").value.trim(),
+        ci = document.getElementById("resIn").value,
+        co = document.getElementById("resOut").value,
+        st = document.getElementById("resStatus").value,
+        err = "";
+
+    // validation
+    if (guest == "" || phone == "" || room == "" || ci == "" || co == "")
+        err = "Complete all reservation fields.";
+    else if (co <= ci)
+        err = "Check-out must be after check-in.";
+
+    document.getElementById("resError").innerHTML = err;
+    if (err != "") return;
+
+    // add new or update existing
+    if (editReservationIndex == -1) {
+        adminReservations.push({
+            id: adminReservations.length + 1,
+            guest: guest,
+            phone: phone,
+            room: room,
+            checkIn: ci,
+            checkOut: co,
+            status: st
+        });
+    } else {
+        let x = adminReservations[editReservationIndex];
+        x.guest = guest;
+        x.phone = phone;
+        x.room = room;
+        x.checkIn = ci;
+        x.checkOut = co;
+        x.status = st;
+    }
+
+    clearReservationForm();
+    showReservations();
+    showFrontDesk();
+    showAdminDashboard();
+}
+
+function editReservationRecord(i) {
+    editReservationIndex = i;
+    let x = adminReservations[i];
+
+    document.getElementById("resGuest").value = x.guest;
+    document.getElementById("resPhone").value = x.phone;
+    document.getElementById("resRoom").value = x.room;
+    document.getElementById("resIn").value = x.checkIn;
+    document.getElementById("resOut").value = x.checkOut;
+    document.getElementById("resStatus").value = x.status;
+    document.getElementById("resFormTitle").innerHTML = "Edit Reservation #" + x.id;
+}
+
+function deleteReservation(i) {
+    if (confirm("Delete this reservation?")) {
+        removeAdminItem(adminReservations, i);
+        showReservations();
+        showAdminDashboard();
+    }
+}
+
+function clearReservationForm() {
+    editReservationIndex = -1;
+    document.getElementById("resGuest").value = "";
+    document.getElementById("resPhone").value = "";
+    document.getElementById("resRoom").value = "";
+    document.getElementById("resIn").value = "";
+    document.getElementById("resOut").value = "";
+    document.getElementById("resStatus").value = "Reserved";
+    document.getElementById("resError").innerHTML = "";
+    document.getElementById("resFormTitle").innerHTML = "Add / Edit Reservation";
+}
+
+/* ===================== FRONT DESK ===================== */
+
+function showFrontDesk() {
+    let ci = 0,
+        co = 0;
+
+    let t = "<table class='datatable adm-table'>" +
+        "<tr><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Front Desk Status</th></tr>";
+
+    for (let i = 0; i < adminReservations.length; i++) {
+        let x = adminReservations[i];
+
+        if (x.status == "Checked-in") ci++;
+        if (x.status == "Checked-out") co++;
+
+        t += "<tr>" +
+            "<td>" + safeAdminText(x.guest) + "</td>" +
+            "<td>" + safeAdminText(x.room) + "</td>" +
+            "<td>" + x.checkIn + "</td>" +
+            "<td>" + x.checkOut + "</td>" +
+            "<td>" + safeAdminText(x.status) + "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("deskSummary").innerHTML =
+        "<p>Currently checked-in: <b>" + ci + "</b> &nbsp; Checked-out: <b>" + co + "</b></p>";
+    document.getElementById("deskTable").innerHTML = t + "</table>";
+}
+
+/* ===================== PAYMENTS ===================== */
+
+function showPayments() {
+    let t = "<table class='datatable adm-table'>" +
+        "<tr><th>Payment ID</th><th>Booking</th><th>Guest</th><th>Amount</th><th>Method</th><th>Status</th><th>Action</th></tr>";
+
+    for (let i = 0; i < adminPayments.length; i++) {
+        let x = adminPayments[i];
+        t += "<tr>" +
+            "<td>" + x.id + "</td>" +
+            "<td>" + x.booking + "</td>" +
+            "<td>" + safeAdminText(x.guest) + "</td>" +
+            "<td>$" + x.amount + "</td>" +
+            "<td>" + safeAdminText(x.method) + "</td>" +
+            "<td>" + safeAdminText(x.status) + "</td>" +
+            "<td>" +
+            "<button class='light adm-action-btn' onclick='cyclePayment(" + i + ")'>Change Status</button> " +
+            "<button class='danger adm-action-btn' onclick='deletePayment(" + i + ")'>Delete</button>" +
+            "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("paymentTable").innerHTML = t + "</table>";
+}
+
+function savePayment() {
+    let b = document.getElementById("payBooking").value,
+        g = document.getElementById("payGuest").value.trim(),
+        a = document.getElementById("payAmount").value,
+        m = document.getElementById("payMethod").value,
+        s = document.getElementById("payStatus").value,
+        err = "";
+
+    // validation
+    if (b == "" || g == "" || a == "")
+        err = "Enter booking ID, guest and amount.";
+    else if (a <= 0)
+        err = "Amount must be greater than zero.";
+
+    document.getElementById("payError").innerHTML = err;
+    if (err != "") return;
+
+    // if a payment for this booking already exists, update it
+    let exists = false;
+    for (let i = 0; i < adminPayments.length; i++) {
+        if (adminPayments[i].booking == b) {
+            adminPayments[i].guest = g;
+            adminPayments[i].amount = a * 1;
+            adminPayments[i].method = m;
+            adminPayments[i].status = s;
+            exists = true;
+        }
+    }
+
+    // otherwise add a new payment
+    if (!exists) {
+        adminPayments.push({
+            id: adminPayments.length + 1,
+            booking: b * 1,
+            guest: g,
+            amount: a * 1,
+            method: m,
+            status: s
+        });
+    }
+
+    document.getElementById("payBooking").value = "";
+    document.getElementById("payGuest").value = "";
+    document.getElementById("payAmount").value = "";
+    document.getElementById("payError").innerHTML = "";
+
+    showPayments();
+    showAdminDashboard();
+}
+
+// Unpaid -> Paid -> Refunded -> Unpaid
+function cyclePayment(i) {
+    if (adminPayments[i].status == "Unpaid") adminPayments[i].status = "Paid";
+    else if (adminPayments[i].status == "Paid") adminPayments[i].status = "Refunded";
+    else adminPayments[i].status = "Unpaid";
+
+    showPayments();
+}
+
+function deletePayment(i) {
+    removeAdminItem(adminPayments, i);
+    showPayments();
+    showAdminDashboard();
+}
+
+/* ===================== FEEDBACK ===================== */
+
+function showFeedback() {
+    // guest directory (only accounts with role "Guest")
+    let guests = "<table class='datatable adm-table'>" +
+        "<tr><th>Guest Name</th><th>Email</th><th>Phone</th><th>Status</th></tr>";
+
+    for (let i = 0; i < adminAccounts.length; i++) {
+        if (adminAccounts[i].role == "Guest") {
+            guests += "<tr>" +
+                "<td>" + safeAdminText(adminAccounts[i].first + " " + adminAccounts[i].last) + "</td>" +
+                "<td>" + safeAdminText(adminAccounts[i].email) + "</td>" +
+                "<td>" + safeAdminText(adminAccounts[i].phone) + "</td>" +
+                "<td>" + safeAdminText(adminAccounts[i].status) + "</td>" +
+                "</tr>";
+        }
+    }
+
+    document.getElementById("guestDirectory").innerHTML = guests + "</table>";
+
+    // feedback table
+    let t = "<table class='datatable adm-table'>" +
+        "<tr><th>Guest</th><th>Feedback</th><th>Status</th><th>Actions</th></tr>";
+
+    for (let j = 0; j < adminFeedback.length; j++) {
+        let x = adminFeedback[j];
+        t += "<tr>" +
+            "<td>" + safeAdminText(x.guest) + "</td>" +
+            "<td>" + safeAdminText(x.text) + "</td>" +
+            "<td>" + safeAdminText(x.status) + "</td>" +
+            "<td>" +
+            "<button class='light adm-action-btn' onclick='updateFeedback(" + j + ")'>Next Status</button> " +
+            "<button class='danger adm-action-btn' onclick='deleteFeedback(" + j + ")'>Delete</button>" +
+            "</td>" +
+            "</tr>";
+    }
+
+    document.getElementById("feedbackTable").innerHTML = t + "</table>";
+}
+
+function addFeedback() {
+    let g = document.getElementById("fbGuest").value.trim(),
+        t = document.getElementById("fbText").value.trim(),
+        s = document.getElementById("fbStatus").value,
+        err = "";
+
+    if (g == "" || t == "")
+        err = "Enter guest name and feedback.";
+
+    document.getElementById("fbError").innerHTML = err;
+    if (err != "") return;
+
+    adminFeedback.push({ id: adminFeedback.length + 1, guest: g, text: t, status: s });
+
+    document.getElementById("fbGuest").value = "";
+    document.getElementById("fbText").value = "";
+    document.getElementById("fbError").innerHTML = "";
+
+    showFeedback();
+}
+
+// New -> Reviewed -> Resolved -> New
+function updateFeedback(i) {
+    if (adminFeedback[i].status == "New") adminFeedback[i].status = "Reviewed";
+    else if (adminFeedback[i].status == "Reviewed") adminFeedback[i].status = "Resolved";
+    else adminFeedback[i].status = "New";
+
+    showFeedback();
+}
+
+function deleteFeedback(i) {
+    removeAdminItem(adminFeedback, i);
+    showFeedback();
+}
