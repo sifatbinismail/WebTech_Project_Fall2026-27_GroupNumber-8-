@@ -1,10 +1,13 @@
 console.log("Manager.js Connected");
+
+// room type gulo, price shoho
 let roomTypes = [
     { name: "Standard", price: 50 },
     { name: "Deluxe", price: 90 },
     { name: "Suite", price: 150 }
 ];
 
+// room er data array te rakhsi, page reload dile abar shuru theke hobe
 let rooms = [
     { id: 1, number: "101", type: "Standard", floor: 1, status: "Available" },
     { id: 2, number: "102", type: "Standard", floor: 1, status: "Occupied" },
@@ -12,6 +15,7 @@ let rooms = [
     { id: 4, number: "301", type: "Suite", floor: 3, status: "Maintenance" }
 ];
 
+// task er data
 let tasks = [
     { id: 1, room: "301", task: "Fix air conditioner", assignedTo: "Karim", status: "Pending" },
     { id: 2, room: "101", task: "Clean bathroom", assignedTo: "Rina", status: "Done" }
@@ -19,28 +23,30 @@ let tasks = [
 
 let nextRoomId = 5;
 let nextTaskId = 3;
-let editRoomId = 0;   // 0 means "adding a new room"
-let editTaskId = 0;   // 0 means "adding a new task"
+let editRoomId = 0;   // 0 mane notun room add korsi, 0 na hole oi id er room edit korsi
+let editTaskId = 0;   // 0 mane notun task add korsi
 
+// Page load hole prothome dropdown bhore ar table gulo dekhai
 document.addEventListener("DOMContentLoaded", function () {
     loadTypeOptions();
     refreshAll();
 });
 
+// data change hole shob abar dekhai
 function refreshAll() {
     loadRoomOptions();
-    showReport();
     showRooms();
-    showSummary();
     showTasks();
 }
 
+// sidebar e click korle ekta section dekhai, arekta hide kori
 function showSection(name) {
     document.getElementById("roomsSection").style.display = "none";
     document.getElementById("tasksSection").style.display = "none";
     document.getElementById("menuRooms").className = "";
     document.getElementById("menuTasks").className = "";
 
+    // jeta click korsi sheta show kori
     if (name == "tasks") {
         document.getElementById("tasksSection").style.display = "block";
         document.getElementById("menuTasks").className = "active";
@@ -48,9 +54,10 @@ function showSection(name) {
         document.getElementById("roomsSection").style.display = "block";
         document.getElementById("menuRooms").className = "active";
     }
-    return false;
+    return false;   // false dilam jate page upore jump na kore
 }
 
+// room type er nam diye price ber kori
 function getPrice(typeName) {
     for (let i = 0; i < roomTypes.length; i++) {
         if (roomTypes[i].name == typeName) {
@@ -60,6 +67,7 @@ function getPrice(typeName) {
     return 0;
 }
 
+// id diye room ta array er koto number e ache ber kori
 function findRoomIndex(id) {
     for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].id == id) {
@@ -69,6 +77,7 @@ function findRoomIndex(id) {
     return -1;
 }
 
+// id diye task ta array er koto number e ache ber kori
 function findTaskIndex(id) {
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].id == id) {
@@ -78,6 +87,7 @@ function findTaskIndex(id) {
     return -1;
 }
 
+// oi room e kono pending task ache kina dekhi
 function roomHasPendingTask(number) {
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].room == number && tasks[i].status == "Pending") {
@@ -87,6 +97,7 @@ function roomHasPendingTask(number) {
     return false;
 }
 
+// room type er dropdown bhore dei
 function loadTypeOptions() {
     let text = "";
     for (let i = 0; i < roomTypes.length; i++) {
@@ -95,6 +106,7 @@ function loadTypeOptions() {
     document.getElementById("RoomType").innerHTML = text;
 }
 
+// task form er room dropdown e ekhon jei room gulo ache sheigulo dei
 function loadRoomOptions() {
     let select = document.getElementById("TaskRoom");
     let old = select.value;
@@ -103,54 +115,20 @@ function loadRoomOptions() {
         text += "<option value='" + rooms[i].number + "'>" + rooms[i].number + " (" + rooms[i].type + ")</option>";
     }
     select.innerHTML = text;
-    select.value = old;
+    // age jei room select kora chilo sheta thakle sheta abar select kori
+    if (old != "") {
+        select.value = old;
+    }
 }
-
-function showReport() {
-    let available = 0;
-    let occupied = 0;
-    let maintenance = 0;
-    let revenue = 0;
-    let pending = 0;
-
-    for (let i = 0; i < rooms.length; i++) {
-        if (rooms[i].status == "Available") {
-            available++;
-        } else if (rooms[i].status == "Occupied") {
-            occupied++;
-            revenue += getPrice(rooms[i].type);
-        } else {
-            maintenance++;
-        }
-    }
-    for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].status == "Pending") {
-            pending++;
-        }
-    }
-
-    let percent = 0;
-    if (rooms.length > 0) {
-        percent = Math.round((occupied / rooms.length) * 100);
-    }
-
-    let text = "";
-    text += "<div class='mgr-stat'><b>" + rooms.length + "</b>Total Rooms</div>";
-    text += "<div class='mgr-stat'><b>" + available + "</b>Available</div>";
-    text += "<div class='mgr-stat'><b>" + occupied + "</b>Occupied</div>";
-    text += "<div class='mgr-stat'><b>" + maintenance + "</b>Maintenance</div>";
-    text += "<div class='mgr-stat'><b>" + percent + "%</b>Occupancy</div>";
-    text += "<div class='mgr-stat'><b>$" + revenue + "</b>Night Revenue</div>";
-    text += "<div class='mgr-stat'><b>" + pending + "</b>Pending Tasks</div>";
-    document.getElementById("reportBox").innerHTML = text;
-}
-
+// kotogula room ache dekhbo je oitar kaj ta korchi 
 function showRooms() {
     let search = document.getElementById("SearchRoom").value.trim();
     let filter = document.getElementById("FilterStatus").value;
 
-    let text = "<table class='datatable'>";
-    text += "<tr><th>Room No</th><th>Type</th><th>Floor</th><th>Price</th><th>Status</th><th>Action</th></tr>";
+    let table = document.getElementById("roomTable");
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
 
     let count = 0;
     for (let i = 0; i < rooms.length; i++) {
@@ -161,59 +139,58 @@ function showRooms() {
         if (search != "" && r.number.indexOf(search) == -1) {
             continue;
         }
-        text += "<tr>";
-        text += "<td>" + r.number + "</td>";
-        text += "<td>" + r.type + "</td>";
-        text += "<td>" + r.floor + "</td>";
-        text += "<td>$" + getPrice(r.type) + "</td>";
-        text += "<td><span class='badge " + r.status + "'>" + r.status + "</span></td>";
-        text += "<td><button onclick='editRoom(" + r.id + ")'>Edit</button>";
-        text += "<button class='danger' onclick='deleteRoom(" + r.id + ")'>Delete</button></td>";
-        text += "</tr>";
+        let row = table.insertRow();
+        row.insertCell().innerHTML = r.number;
+        row.insertCell().innerHTML = r.type;
+        row.insertCell().innerHTML = r.floor;
+        row.insertCell().innerHTML = "$" + getPrice(r.type);
+        row.insertCell().innerHTML = "<span class='badge " + r.status + "'>" + r.status + "</span>";
+        row.insertCell().innerHTML = "<button onclick='editRoom(" + r.id + ")'>Edit</button><button class='danger' onclick='deleteRoom(" + r.id + ")'>Delete</button>";
         count++;
     }
     if (count == 0) {
-        text += "<tr><td colspan='6'>No rooms found</td></tr>";
+        let cell = table.insertRow().insertCell();
+        cell.colSpan = 6;
+        cell.innerHTML = "No rooms found";
     }
-    text += "</table>";
-    document.getElementById("roomTable").innerHTML = text;
 }
 
+// room form er data thik ache kina dekhi
 function validateRoom() {
-    let ok = true;
     let number = document.getElementById("RoomNumber").value.trim();
     let floorText = document.getElementById("RoomFloor").value;
     let floor = Number(floorText);
-    let errNumber = document.getElementById("RoomNumberError");
-    let errFloor = document.getElementById("RoomFloorError");
-    errNumber.innerHTML = "";
-    errFloor.innerHTML = "";
+    let error = document.getElementById("RoomError");
 
     if (number == "") {
-        errNumber.innerHTML = "Enter the room number";
-        ok = false;
-    } else if (/^[0-9]{3,4}$/.test(number) == false) {
-        errNumber.innerHTML = "Room number must be 3 or 4 digits";
-        ok = false;
-    } else {
-        for (let i = 0; i < rooms.length; i++) {
-            if (rooms[i].number == number && rooms[i].id != editRoomId) {
-                errNumber.innerHTML = "This room number already exists";
-                ok = false;
-            }
+        error.innerHTML = "Enter the room number";
+        return false;
+    }
+    if (/^[0-9]{3,4}$/.test(number) == false) {
+        error.innerHTML = "Room number must be 3 or 4 digits";
+        return false;
+    }
+    // ei number er room ager theke ache kina, edit korle nijer ta bad dei
+    for (let i = 0; i < rooms.length; i++) {
+        if (rooms[i].number == number && rooms[i].id != editRoomId) {
+            error.innerHTML = "This room number already exists";
+            return false;
         }
     }
-
     if (floorText === "") {
-        errFloor.innerHTML = "Enter the floor";
-        ok = false;
-    } else if (floor < 1 || floor > 20 || floor != Math.floor(floor)) {
-        errFloor.innerHTML = "Floor must be a whole number from 1 to 20";
-        ok = false;
+        error.innerHTML = "Enter the floor";
+        return false;
     }
-    return ok;
+     if (floor < 1 || floor > 20 || floor != Math.floor(floor)) {
+        error.innerHTML = "Floor must be a whole number from 1 to 20";
+        return false;
+    }
+
+    error.innerHTML = "";
+    return true;
 }
 
+// Add Room button, notun room add kori, edit korle update kori
 function addRoom() {
     document.getElementById("RoomMsg").innerHTML = "";
     if (validateRoom() == false) {
@@ -236,7 +213,8 @@ function addRoom() {
         rooms[index].type = type;
         rooms[index].floor = floor;
         rooms[index].status = status;
-       
+
+        // room er number change hole task gulor room number-o change kori
         for (let i = 0; i < tasks.length; i++) {
             if (tasks[i].room == oldNumber) {
                 tasks[i].room = number;
@@ -249,6 +227,7 @@ function addRoom() {
     document.getElementById("RoomMsg").innerHTML = msg;
 }
 
+// Edit e click korle room er data form e boshai
 function editRoom(id) {
     let index = findRoomIndex(id);
     editRoomId = id;
@@ -257,11 +236,11 @@ function editRoom(id) {
     document.getElementById("RoomFloor").value = rooms[index].floor;
     document.getElementById("RoomStatus").value = rooms[index].status;
     document.getElementById("RoomMode").innerHTML = "Mode: Editing room " + rooms[index].number;
-    document.getElementById("RoomNumberError").innerHTML = "";
-    document.getElementById("RoomFloorError").innerHTML = "";
+    document.getElementById("RoomError").innerHTML = "";
     document.getElementById("RoomMsg").innerHTML = "";
 }
 
+// room delete korar age kichu check kori
 function deleteRoom(id) {
     let index = findRoomIndex(id);
     let number = rooms[index].number;
@@ -278,6 +257,7 @@ function deleteRoom(id) {
         return;
     }
 
+    // oi room ta bad diye notun array banai
     let newRooms = [];
     for (let i = 0; i < rooms.length; i++) {
         if (rooms[i].id != id) {
@@ -286,6 +266,7 @@ function deleteRoom(id) {
     }
     rooms = newRooms;
 
+    // oi room er task gulo-o bad dei
     let newTasks = [];
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].room != number) {
@@ -307,33 +288,18 @@ function clearRoomForm() {
     document.getElementById("RoomFloor").value = "";
     document.getElementById("RoomType").selectedIndex = 0;
     document.getElementById("RoomStatus").value = "Available";
-    document.getElementById("RoomNumberError").innerHTML = "";
-    document.getElementById("RoomFloorError").innerHTML = "";
+    document.getElementById("RoomError").innerHTML = "";
     document.getElementById("RoomMsg").innerHTML = "";
     document.getElementById("RoomMode").innerHTML = "Mode: Add new room";
 }
 
-function showSummary() {
-    let pending = 0;
-    let done = 0;
-    for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].status == "Pending") {
-            pending++;
-        } else {
-            done++;
-        }
-    }
-    let text = "";
-    text += "<div class='mgr-stat wide'><b>" + tasks.length + "</b>Total Tasks</div>";
-    text += "<div class='mgr-stat wide'><b>" + pending + "</b>Pending</div>";
-    text += "<div class='mgr-stat wide'><b>" + done + "</b>Done</div>";
-    document.getElementById("taskSummary").innerHTML = text;
-}
-
 function showTasks() {
     let filter = document.getElementById("FilterTask").value;
-    let text = "<table class='datatable'>";
-    text += "<tr><th>Room</th><th>Task</th><th>Assigned To</th><th>Status</th><th>Action</th></tr>";
+
+    let table = document.getElementById("taskTable");
+    while (table.rows.length > 1) {      // header row thakbe, baki muche felbo
+        table.deleteRow(1);
+    }
 
     let count = 0;
     for (let i = 0; i < tasks.length; i++) {
@@ -341,60 +307,61 @@ function showTasks() {
         if (filter != "All" && t.status != filter) {
             continue;
         }
-        text += "<tr>";
-        text += "<td>" + t.room + "</td>";
-        text += "<td>" + t.task + "</td>";
-        text += "<td>" + t.assignedTo + "</td>";
-        text += "<td><span class='badge " + t.status + "'>" + t.status + "</span></td>";
-        text += "<td>";
+        let buttons = "";
         if (t.status == "Pending") {
-            text += "<button onclick='markDone(" + t.id + ")'>Mark Done</button>";
+            buttons += "<button onclick='markDone(" + t.id + ")'>Mark Done</button>";
         }
-        text += "<button onclick='editTask(" + t.id + ")'>Edit</button>";
-        text += "<button class='danger' onclick='deleteTask(" + t.id + ")'>Delete</button>";
-        text += "</td></tr>";
+        buttons += "<button onclick='editTask(" + t.id + ")'>Edit</button>";
+        buttons += "<button class='danger' onclick='deleteTask(" + t.id + ")'>Delete</button>";
+
+        let row = table.insertRow();
+        row.insertCell().innerHTML = t.room;
+        row.insertCell().innerHTML = t.task;
+        row.insertCell().innerHTML = t.assignedTo;
+        row.insertCell().innerHTML = "<span class='badge " + t.status + "'>" + t.status + "</span>";
+        row.insertCell().innerHTML = buttons;
         count++;
     }
     if (count == 0) {
-        text += "<tr><td colspan='5'>No tasks found</td></tr>";
+        let cell = table.insertRow().insertCell();
+        cell.colSpan = 5;
+        cell.innerHTML = "No tasks found";
     }
-    text += "</table>";
-    document.getElementById("taskTable").innerHTML = text;
 }
 
+// task form er data thik ache kina 
 function validateTask() {
-    let ok = true;
     let room = document.getElementById("TaskRoom").value;
     let text = document.getElementById("TaskText").value.trim();
     let worker = document.getElementById("TaskWorker").value.trim();
-    let errRoom = document.getElementById("TaskRoomError");
-    let errText = document.getElementById("TaskTextError");
-    let errWorker = document.getElementById("TaskWorkerError");
-    errRoom.innerHTML = "";
-    errText.innerHTML = "";
-    errWorker.innerHTML = "";
+    let error = document.getElementById("TaskError");
 
     if (room == "") {
-        errRoom.innerHTML = "Add a room first, then select it";
-        ok = false;
+        error.innerHTML = "Add a room first, then select it";
+        return false;
     }
     if (text == "") {
-        errText.innerHTML = "Enter the task";
-        ok = false;
-    } else if (text.length < 5) {
-        errText.innerHTML = "Task must be at least 5 characters";
-        ok = false;
+        error.innerHTML = "Enter the task";
+        return false;
+    }
+    if (text.length < 5) {
+        error.innerHTML = "Task must be at least 5 characters";
+        return false;
     }
     if (worker == "") {
-        errWorker.innerHTML = "Enter the staff name";
-        ok = false;
-    } else if (worker.length < 3) {
-        errWorker.innerHTML = "Name must be at least 3 characters";
-        ok = false;
+        error.innerHTML = "Enter the staff name";
+        return false;
     }
-    return ok;
+    if (worker.length < 3) {
+        error.innerHTML = "Name must be at least 3 characters";
+        return false;
+    }
+
+    error.innerHTML = "";
+    return true;
 }
 
+// Add Task button, notun task add kori, edit korle update kori
 function addTask() {
     document.getElementById("TaskMsg").innerHTML = "";
     if (validateTask() == false) {
@@ -423,6 +390,7 @@ function addTask() {
     document.getElementById("TaskMsg").innerHTML = msg;
 }
 
+// Edit e click korle task er data form e boshai
 function editTask(id) {
     let index = findTaskIndex(id);
     editTaskId = id;
@@ -431,12 +399,11 @@ function editTask(id) {
     document.getElementById("TaskWorker").value = tasks[index].assignedTo;
     document.getElementById("TaskStatus").value = tasks[index].status;
     document.getElementById("TaskMode").innerHTML = "Mode: Editing task of room " + tasks[index].room;
-    document.getElementById("TaskRoomError").innerHTML = "";
-    document.getElementById("TaskTextError").innerHTML = "";
-    document.getElementById("TaskWorkerError").innerHTML = "";
+    document.getElementById("TaskError").innerHTML = "";
     document.getElementById("TaskMsg").innerHTML = "";
 }
 
+// task delete kori
 function deleteTask(id) {
     if (confirm("Delete this task?") == false) {
         return;
@@ -455,6 +422,7 @@ function deleteTask(id) {
     document.getElementById("TaskMsg").innerHTML = "Task deleted.";
 }
 
+// task done kori. room Maintenance e thakle ar kono pending task na thakle room Available kore dei
 function markDone(id) {
     let index = findTaskIndex(id);
     tasks[index].status = "Done";
@@ -473,14 +441,13 @@ function markDone(id) {
     document.getElementById("TaskMsg").innerHTML = msg;
 }
 
+// task form ta faka kori
 function clearTaskForm() {
     editTaskId = 0;
     document.getElementById("TaskText").value = "";
     document.getElementById("TaskWorker").value = "";
     document.getElementById("TaskStatus").value = "Pending";
-    document.getElementById("TaskRoomError").innerHTML = "";
-    document.getElementById("TaskTextError").innerHTML = "";
-    document.getElementById("TaskWorkerError").innerHTML = "";
+    document.getElementById("TaskError").innerHTML = "";
     document.getElementById("TaskMsg").innerHTML = "";
     document.getElementById("TaskMode").innerHTML = "Mode: Add new task";
 }
