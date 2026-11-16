@@ -1,6 +1,5 @@
 console.log("Admin.js Connected");
 
-/* Phase 1: Admin-only demonstration copies. These arrays are NOT live shared data. */
 let adminAccounts = [
  {first:"Admin",last:"User",email:"admin@hotel.com",phone:"01711111111",role:"Admin",status:"Active"},
  {first:"Sifat",last:"Manager",email:"manager@hotel.com",phone:"01722222222",role:"Manager",status:"Active"},
