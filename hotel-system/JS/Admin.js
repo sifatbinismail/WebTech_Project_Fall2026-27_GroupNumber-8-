@@ -382,7 +382,7 @@ function toggleStatus(id) {
   const accounts = getAccounts();
   const acc = accounts.find(a => a.id === id);
   acc.status = acc.status === "Active" ? "Disabled" : "Active";
-  saveAccounts(accounts);   // eta must
+  saveAccounts(accounts);   
   renderAccounts();
 }
 
