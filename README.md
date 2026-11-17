@@ -30,9 +30,3 @@ So everything that must work together (for example rooms and tasks) lives on ONE
 
 ## Test accounts
 admin@hotel.com / admin123 · manager@hotel.com / manager123 · reception@hotel.com / recep123 · guest@hotel.com / guest123
-
-## Coding rules (only what the course taught)
-- HTML forms/tables, CSS classes and ids, JavaScript: `let`/`const`, arrays of objects, `for` loops, `if/else`, `switch`, functions, `onclick`/`onchange`/`onkeyup`/`onsubmit`, `getElementById`, `innerHTML`, `.style`, `.value`, `.trim()`, `.length`, `.push()`, `.indexOf()`, regex `.test()`.
-- No `localStorage`, no frameworks, no arrow functions, no `map`/`filter`/`find`. Use loops instead.
-- Prefix your CSS classes with your role (`adm-`, `mgr-`, `rec-`, `gst-`).
-- Copy the layout (topbar, sidebar, cards, fieldset forms) from `Page/Manager.html`.
